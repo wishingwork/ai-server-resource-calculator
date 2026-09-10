@@ -2,6 +2,7 @@
  * Enterprise AI Solution Architect Recommendation Engine
  * Evaluates company scale, active users, data sensitivity, latency, and TCO
  * to generate and rank the Top 3 Recommended Architectures.
+ * Provides detailed BOM itemized costs, rate cards, and step-by-step TCO calculation formulas.
  */
 
 class AIArchitectureRecommender {
@@ -10,12 +11,11 @@ class AIArchitectureRecommender {
   }
 
   /**
-   * Generates the Top 3 recommended enterprise architectures
+   * Generates the Top 3 recommended enterprise architectures with full BOM pricing & formulas
    */
   getTop3Recommendations(workload, constraints = {}) {
     const users = workload.activeUsers;
-    const privacy = constraints.privacyLevel || 'strict'; // 'standard', 'strict', 'air_gapped'
-    const latencyPriority = constraints.latencyPriority || 'balanced'; // 'subsecond', 'balanced', 'throughput'
+    const privacy = constraints.privacyLevel || 'strict';
 
     let rec1, rec2, rec3;
 
@@ -23,23 +23,59 @@ class AIArchitectureRecommender {
     // RECOMMENDATION #1: TOP OVERALL STRATEGIC VALUE & BALANCED TCO
     // =========================================================================
     if (users <= 25) {
-      // Small Teams / Startups (<25 users): Serverless Edge or Smart Tiered API
+      // Small Teams (<25 users): Cloudflare Workers AI + OpenAI GPT-4o-mini
       const cloudflareOption = this.calc.calculateCloudDeployOption('cloudflare', 0, workload);
       const apiOption = this.calc.calculateCloudLLMOption('chatgpt_openai', 'gpt_4o_mini', workload);
       
+      const initialCapEx = 0;
+      const monthlyCompute = cloudflareOption.monthlyCost;
+      const monthlyApiTokens = apiOption.monthlyCost * 0.4;
+      const monthlyMaintenance = 50; // Minimal API integration maintenance
+      const monthlyOpEx = monthlyCompute + monthlyApiTokens + monthlyMaintenance;
+      const monthlyCost = monthlyOpEx;
+      const threeYearTCO = monthlyCost * 36;
+      const oneYearTCO = monthlyCost * 12;
+
       rec1 = {
         rank: 1,
         title: "Hybrid Serverless & Smart API Gateway",
         category: "Cloud Serverless & API",
         badgeText: "🏆 #1 Best ROI for Small Teams",
         badgeClass: "badge-gold",
-        monthlyCost: (cloudflareOption.monthlyCost + (apiOption.monthlyCost * 0.4)),
-        oneYearTCO: (cloudflareOption.oneYearTCO + (apiOption.oneYearTCO * 0.4)),
-        threeYearTCO: (cloudflareOption.threeYearTCO + (apiOption.threeYearTCO * 0.4)),
+        initialCapEx,
+        monthlyOpEx,
+        monthlyCost,
+        oneYearTCO,
+        threeYearTCO,
         latencyRating: "< 350ms",
         throughputTokensSec: 150,
         privacyRating: "Standard Business Isolation (Zero Data Retention)",
-        devopsEffort: "Near Zero (No Hardware / No Server Maintenance)",
+        devopsEffort: "Near Zero (No Hardware Maintenance)",
+
+        // Per-Account / Service Rates
+        serviceRates: [
+          { service: "Cloudflare Workers AI (Routine Queries)", rate: `$0.00015 per 1,000 tokens` },
+          { service: "OpenAI GPT-4o-mini (Complex Reasoning)", rate: `$0.15 / 1M input, $0.60 / 1M output tokens` },
+          { service: "Cloudflare Vectorize + Redis Cache", rate: `$5.00 / month flat storage rate` }
+        ],
+
+        // Itemized Bill of Materials (BOM)
+        bom: [
+          { item: "Primary Inference Engine (Cloudflare Workers AI)", type: "OpEx", qty: `${(workload.monthlyTotalTokens * 0.8 / 1000).toLocaleString(undefined, {maximumFractionDigits:0})}k tokens`, unitCost: "$0.00015 / 1k", totalCost: monthlyCompute },
+          { item: "Reasoning Gateway (OpenAI GPT-4o-mini)", type: "OpEx", qty: `${(workload.monthlyTotalTokens * 0.2 / 1000000).toFixed(1)}M tokens`, unitCost: "$0.15-$0.60 / 1M", totalCost: monthlyApiTokens },
+          { item: "Vector Cache & API Proxy Upkeep", type: "OpEx", qty: "1 Gateway", unitCost: "$50.00 / mo", totalCost: monthlyMaintenance }
+        ],
+
+        // Step-by-Step Calculation Formula
+        calculationFormula: {
+          step1: `Initial Upfront CapEx = $0 (Zero Hardware Purchase)`,
+          step2: `Monthly Compute = (${(workload.monthlyTotalTokens * 0.8 / 1000).toLocaleString(undefined, {maximumFractionDigits:0})}k tokens × $0.00015/1k) = $${monthlyCompute.toFixed(2)} / mo`,
+          step3: `Monthly API Tokens = (${(workload.monthlyTotalTokens * 0.2 / 1000000).toFixed(1)}M tokens × GPT-4o-mini rate) = $${monthlyApiTokens.toFixed(2)} / mo`,
+          step4: `Monthly Maintenance = $${monthlyMaintenance.toFixed(2)} / mo`,
+          step5: `Est. Monthly TCO = ($0 CapEx ÷ 36) + $${monthlyCompute.toFixed(2)} + $${monthlyApiTokens.toFixed(2)} + $${monthlyMaintenance.toFixed(2)} = $${Math.round(monthlyCost).toLocaleString()} / mo`,
+          step6: `3-Year Total TCO = $0 CapEx + ($${Math.round(monthlyCost).toLocaleString()} / mo × 36 Months) = $${Math.round(threeYearTCO).toLocaleString()}`
+        },
+
         components: [
           { name: "Primary Inference Engine", detail: "Cloudflare Workers AI (Qwen 2.5 / Gemma 2 9B) for 80% routine queries" },
           { name: "Complex Reasoning Gateway", detail: "OpenAI GPT-4o-mini / Gemini 2.0 Flash for heavy reasoning routing" },
@@ -55,27 +91,67 @@ class AIArchitectureRecommender {
           "Requires reliable internet connection",
           "Not air-gapped from external cloud networks"
         ],
-        architectRationale: `With ${users} active users generating ~${workload.totalDailyQueries.toLocaleString()} daily queries, dedicated 24/7 on-premise hardware ($3,000-$5,000 CapEx) has high idle waste. A hybrid serverless approach provides immediate enterprise agility at just $${Math.round(cloudflareOption.monthlyCost + (apiOption.monthlyCost * 0.4))}/mo.`
+        architectRationale: `With ${users} active users generating ~${workload.totalDailyQueries.toLocaleString()} daily queries, dedicated 24/7 on-premise hardware has high idle waste. A hybrid serverless approach provides immediate enterprise agility at just $${Math.round(monthlyCost)}/mo.`
       };
+
     } else if (users <= 300) {
-      // Mid-Market Teams (25-300 users): On-Premises Dual RTX 5090 / 4090 Workstation Rig
+      // Mid-Market Teams (25-300 users): Dual RTX 5090 On-Premise Rig
       const onPremOption = this.calc.calculateOnPremOption('qwen_2_5_32b', 'rtx_5090', workload);
       
+      const initialCapEx = onPremOption.capEx.totalCapEx;
+      const monthlyAmortization = onPremOption.monthlyAmortization;
+      const monthlyElectricity = onPremOption.opEx.monthlyElectricityCost;
+      const monthlyMaintenance = onPremOption.opEx.monthlyMaintenanceCost;
+      const monthlyOpEx = monthlyElectricity + monthlyMaintenance;
+      const monthlyCost = onPremOption.monthlyCost;
+      const threeYearTCO = onPremOption.threeYearTCO;
+      const oneYearTCO = onPremOption.oneYearTCO;
+
       rec1 = {
         rank: 1,
         title: "Dual RTX 5090 On-Premise Workstation Node",
         category: "On-Premises Dedicated Server",
         badgeText: "🏆 #1 Best Enterprise Value & Payback (< 5 Mo)",
         badgeClass: "badge-gold",
-        monthlyCost: onPremOption.monthlyCost,
-        oneYearTCO: onPremOption.oneYearTCO,
-        threeYearTCO: onPremOption.threeYearTCO,
+        initialCapEx,
+        monthlyOpEx,
+        monthlyCost,
+        oneYearTCO,
+        threeYearTCO,
         latencyRating: "Sub-400ms (High Local Throughput)",
         throughputTokensSec: onPremOption.systemThroughputTokensSec,
         privacyRating: "100% Confidential (Air-Gapped Local LAN)",
         devopsEffort: "Low (Pre-configured Ollama / vLLM Container)",
+
+        // Per-Account / Service Rates
+        serviceRates: [
+          { service: "NVIDIA RTX 5090 32GB GDDR7 Hardware", rate: `$2,400.00 per fitted GPU (CapEx)` },
+          { service: "Dual-GPU Workstation Server Base Platform", rate: `$3,200.00 base platform build (CapEx)` },
+          { service: "Power & Electricity Rate", rate: `${onPremOption.opEx.monthlyKwh} kWh / mo @ $${workload.electricityKwhRate} / kWh` },
+          { service: "IT Hardware Maintenance & Engineering", rate: `$${monthlyMaintenance.toFixed(2)} / month per server node` }
+        ],
+
+        // Itemized Bill of Materials (BOM)
+        bom: [
+          { item: `NVIDIA GeForce RTX 5090 (32GB GDDR7)`, type: "CapEx", qty: `${onPremOption.requiredGpuCount}x GPUs`, unitCost: `$${onPremOption.gpu.server_fitted_cost_usd.toLocaleString()}`, totalCost: onPremOption.capEx.gpuHardwareCost },
+          { item: `${onPremOption.platform.name} (${onPremOption.platform.cpu}, ${onPremOption.platform.ram})`, type: "CapEx", qty: "1x Server Chassis", unitCost: `$${onPremOption.platform.base_hardware_cost_usd.toLocaleString()}`, totalCost: onPremOption.platform.base_hardware_cost_usd },
+          { item: `vLLM / Ollama Engine + ${onPremOption.model.name}`, type: "Software", qty: "Open Source", unitCost: "$0.00", totalCost: 0 },
+          { item: `Electrical Power (${onPremOption.opEx.monthlyKwh} kWh / mo)`, type: "OpEx", qty: `${onPremOption.opEx.monthlyKwh} kWh`, unitCost: `$${workload.electricityKwhRate} / kWh`, totalCost: monthlyElectricity },
+          { item: `IT Engineer Server Maintenance Overhead`, type: "OpEx", qty: "1 Node", unitCost: `$${monthlyMaintenance.toFixed(2)} / mo`, totalCost: monthlyMaintenance }
+        ],
+
+        // Step-by-Step Calculation Formula
+        calculationFormula: {
+          step1: `Initial Upfront CapEx = (${onPremOption.requiredGpuCount}x GPUs @ $${onPremOption.gpu.server_fitted_cost_usd}) + Chassis ($${onPremOption.platform.base_hardware_cost_usd}) = $${initialCapEx.toLocaleString()}`,
+          step2: `Monthly CapEx Amortization = $${initialCapEx.toLocaleString()} ÷ 36 Months = $${monthlyAmortization.toFixed(2)} / mo`,
+          step3: `Monthly Electricity = ${onPremOption.opEx.monthlyKwh} kWh × $${workload.electricityKwhRate}/kWh = $${monthlyElectricity.toFixed(2)} / mo`,
+          step4: `Monthly Maintenance = $${monthlyMaintenance.toFixed(2)} / mo`,
+          step5: `Est. Monthly TCO = ($${initialCapEx.toLocaleString()} ÷ 36) + $${monthlyElectricity.toFixed(2)} + $${monthlyMaintenance.toFixed(2)} = $${Math.round(monthlyCost).toLocaleString()} / mo`,
+          step6: `3-Year Total TCO = $${initialCapEx.toLocaleString()} CapEx + (($${monthlyElectricity.toFixed(2)} Power + $${monthlyMaintenance.toFixed(2)} Maint) × 36 Mos) = $${Math.round(threeYearTCO).toLocaleString()}`
+        },
+
         components: [
-          { name: "Compute Hardware", detail: `${onPremOption.requiredGpuCount}x NVIDIA RTX 5090 (32GB GDDR7 / 1.79 TB/s)` },
+          { name: "Compute Hardware", detail: `${onPremOption.requiredGpuCount}x NVIDIA RTX 5090 (64GB Unified GDDR7 VRAM)` },
           { name: "Base Server Platform", detail: `${onPremOption.platform.name} (${onPremOption.platform.cpu}, ${onPremOption.platform.ram})` },
           { name: "Inference Engine", detail: "vLLM / Ollama with Continuous Batching & PagedAttention" },
           { name: "Served Model", detail: `${onPremOption.model.name} (${onPremOption.model.recommended_quantization})` }
@@ -87,31 +163,68 @@ class AIArchitectureRecommender {
           "High VRAM (64GB): Easily runs 32B-72B models with large context windows"
         ],
         cons: [
-          `Initial CapEx requirement of ~$${onPremOption.capEx.totalCapEx.toLocaleString()}`,
+          `Initial CapEx requirement of ~$${initialCapEx.toLocaleString()}`,
           "Requires in-house IT hardware administration and server room power"
         ],
         architectRationale: `For ${users} active users generating ${workload.monthlyTotalTokens.toLocaleString()} monthly tokens, commercial API bills quickly exceed $1,200-$3,500/month. A dedicated Dual RTX 5090 rig pays for itself in ~4-6 months while guaranteeing 100% data confidentiality.`
       };
+
     } else {
-      // Large Enterprise (300+ users): Quad RTX 5090 / Octa Enterprise Rackmount Cluster
+      // Large Enterprise (300+ users): Quad RTX 5090 Enterprise Rack Node
       const onPremOption = this.calc.calculateOnPremOption('qwen_2_5_72b', 'rtx_5090', workload);
-      
+
+      const initialCapEx = onPremOption.capEx.totalCapEx;
+      const monthlyAmortization = onPremOption.monthlyAmortization;
+      const monthlyElectricity = onPremOption.opEx.monthlyElectricityCost;
+      const monthlyMaintenance = onPremOption.opEx.monthlyMaintenanceCost;
+      const monthlyOpEx = monthlyElectricity + monthlyMaintenance;
+      const monthlyCost = onPremOption.monthlyCost;
+      const threeYearTCO = onPremOption.threeYearTCO;
+      const oneYearTCO = onPremOption.oneYearTCO;
+
       rec1 = {
         rank: 1,
         title: "Quad RTX 5090 High-Density Enterprise AI Rack Node",
         category: "On-Premises Enterprise Cluster",
         badgeText: "🏆 #1 Flagship Performance & Massive TCO Savings",
         badgeClass: "badge-gold",
-        monthlyCost: onPremOption.monthlyCost,
-        oneYearTCO: onPremOption.oneYearTCO,
-        threeYearTCO: onPremOption.threeYearTCO,
+        initialCapEx,
+        monthlyOpEx,
+        monthlyCost,
+        oneYearTCO,
+        threeYearTCO,
         latencyRating: "Ultra-Fast (Tensor Parallelism)",
         throughputTokensSec: onPremOption.systemThroughputTokensSec,
         privacyRating: "100% Air-Gapped / Banking & Defense Grade",
         devopsEffort: "Medium (Kubernetes / Ray Cluster Management)",
+
+        serviceRates: [
+          { service: "NVIDIA RTX 5090 32GB GDDR7 GPUs", rate: `4x @ $2,400.00 per fitted GPU ($9,600.00 CapEx)` },
+          { service: "Quad-GPU Enterprise 4U Server Platform", rate: `$6,500.00 base chassis platform (CapEx)` },
+          { service: "Power & Electricity Rate", rate: `${onPremOption.opEx.monthlyKwh} kWh / mo @ $${workload.electricityKwhRate} / kWh` },
+          { service: "Enterprise IT SysAdmin Overhead", rate: `$${monthlyMaintenance.toFixed(2)} / month` }
+        ],
+
+        bom: [
+          { item: `NVIDIA GeForce RTX 5090 (32GB GDDR7)`, type: "CapEx", qty: `${onPremOption.requiredGpuCount}x GPUs`, unitCost: `$${onPremOption.gpu.server_fitted_cost_usd.toLocaleString()}`, totalCost: onPremOption.capEx.gpuHardwareCost },
+          { item: `${onPremOption.platform.name}`, type: "CapEx", qty: "1x 4U Server Chassis", unitCost: `$${onPremOption.platform.base_hardware_cost_usd.toLocaleString()}`, totalCost: onPremOption.platform.base_hardware_cost_usd },
+          { item: `vLLM Tensor Parallel Stack + ${onPremOption.model.name}`, type: "Software", qty: "Open Source", unitCost: "$0.00", totalCost: 0 },
+          { item: `Electrical Power (${onPremOption.opEx.monthlyKwh} kWh / mo)`, type: "OpEx", qty: `${onPremOption.opEx.monthlyKwh} kWh`, unitCost: `$${workload.electricityKwhRate} / kWh`, totalCost: monthlyElectricity },
+          { item: `Enterprise IT SysAdmin & Hardware Maintenance`, type: "OpEx", qty: "1 Cluster Node", unitCost: `$${monthlyMaintenance.toFixed(2)} / mo`, totalCost: monthlyMaintenance }
+        ],
+
+        calculationFormula: {
+          step1: `Initial Upfront CapEx = (4x GPUs @ $${onPremOption.gpu.server_fitted_cost_usd}) + Chassis ($${onPremOption.platform.base_hardware_cost_usd}) = $${initialCapEx.toLocaleString()}`,
+          step2: `Monthly CapEx Amortization = $${initialCapEx.toLocaleString()} ÷ 36 Months = $${monthlyAmortization.toFixed(2)} / mo`,
+          step3: `Monthly Electricity = ${onPremOption.opEx.monthlyKwh} kWh × $${workload.electricityKwhRate}/kWh = $${monthlyElectricity.toFixed(2)} / mo`,
+          step4: `Monthly Maintenance = $${monthlyMaintenance.toFixed(2)} / mo`,
+          step5: `Est. Monthly TCO = ($${initialCapEx.toLocaleString()} ÷ 36) + $${monthlyElectricity.toFixed(2)} + $${monthlyMaintenance.toFixed(2)} = $${Math.round(monthlyCost).toLocaleString()} / mo`,
+          step6: `3-Year Total TCO = $${initialCapEx.toLocaleString()} CapEx + (($${monthlyElectricity.toFixed(2)} Power + $${monthlyMaintenance.toFixed(2)} Maint) × 36 Mos) = $${Math.round(threeYearTCO).toLocaleString()}`
+        },
+
         components: [
           { name: "Compute Hardware", detail: `${onPremOption.requiredGpuCount}x NVIDIA RTX 5090 (128GB GDDR7 Unified VRAM)` },
-          { name: "Chassis & Server Platform", detail: `${onPremOption.platform.name} (${onPremOption.platform.cpu}, ${onPremOption.platform.ram}, Redundant Titanium PSU)` },
+          { name: "Chassis & Server Platform", detail: `${onPremOption.platform.name} (${onPremOption.platform.cpu}, ${onPremOption.platform.ram})` },
           { name: "Serving Architecture", detail: "vLLM with Tensor Parallelism (TP=4), OpenAI-compatible Endpoint" },
           { name: "Foundation Model", detail: `${onPremOption.model.name} / Kimi / MiniMax MoE` }
         ],
@@ -122,10 +235,10 @@ class AIArchitectureRecommender {
           "Full custom fine-tuning and proprietary internal document indexing"
         ],
         cons: [
-          `Substantial initial CapEx (~$${onPremOption.capEx.totalCapEx.toLocaleString()})`,
+          `Substantial initial CapEx (~$${initialCapEx.toLocaleString()})`,
           "Requires dedicated server room with adequate 2.5kW power & cooling"
         ],
-        architectRationale: `At enterprise scale (${users} users, ~${workload.totalMonthlyQueries.toLocaleString()} queries/month), cloud token meters become an unsustainable recurring expense. A 4x RTX 5090 server delivers frontier-grade 72B intelligence at a fraction of cloud cost with 3-year TCO savings exceeding $150,000.`
+        architectRationale: `At enterprise scale (${users} users, ~${workload.totalMonthlyQueries.toLocaleString()} queries/month), cloud token meters become an unsustainable recurring expense. A 4x RTX 5090 server delivers frontier-grade 72B intelligence at a fraction of cloud cost.`
       };
     }
 
@@ -136,19 +249,55 @@ class AIArchitectureRecommender {
     const airGappedGpuId = users > 200 ? 'rtx_5090' : 'rtx_4090';
     const onPremSecurityOption = this.calc.calculateOnPremOption(airGappedModelId, airGappedGpuId, workload);
 
+    const initialCapExSec = onPremSecurityOption.capEx.totalCapEx;
+    const monthlyAmortSec = onPremSecurityOption.monthlyAmortization;
+    const monthlyElecSec = onPremSecurityOption.opEx.monthlyElectricityCost;
+    const monthlyMaintSec = onPremSecurityOption.opEx.monthlyMaintenanceCost;
+    const monthlyOpExSec = monthlyElecSec + monthlyMaintSec;
+    const monthlyCostSec = onPremSecurityOption.monthlyCost;
+    const threeYearTCOSec = onPremSecurityOption.threeYearTCO;
+    const oneYearTCOSec = onPremSecurityOption.oneYearTCO;
+
     rec2 = {
       rank: 2,
       title: "100% Air-Gapped Sovereign AI Enclave",
       category: "Dedicated On-Premises Security Enclave",
       badgeText: "🔒 #2 100% Data Sovereignty & Zero Egress",
       badgeClass: "badge-purple",
-      monthlyCost: onPremSecurityOption.monthlyCost,
-      oneYearTCO: onPremSecurityOption.oneYearTCO,
-      threeYearTCO: onPremSecurityOption.threeYearTCO,
+      initialCapEx: initialCapExSec,
+      monthlyOpEx: monthlyOpExSec,
+      monthlyCost: monthlyCostSec,
+      oneYearTCO: oneYearTCOSec,
+      threeYearTCO: threeYearTCOSec,
       latencyRating: "Sub-350ms LAN Latency",
       throughputTokensSec: onPremSecurityOption.systemThroughputTokensSec,
       privacyRating: "100% Air-Gapped (Zero Inbound/Outbound Telemetry)",
       devopsEffort: "Medium (Physical Server & Network Segmentation)",
+
+      serviceRates: [
+        { service: `NVIDIA ${onPremSecurityOption.gpu.name} (${onPremSecurityOption.gpu.vram_gb}GB)`, rate: `${onPremSecurityOption.requiredGpuCount}x @ $${onPremSecurityOption.gpu.server_fitted_cost_usd.toLocaleString()} ea (CapEx)` },
+        { service: `${onPremSecurityOption.platform.name}`, rate: `$${onPremSecurityOption.platform.base_hardware_cost_usd.toLocaleString()} platform cost (CapEx)` },
+        { service: "Power & Electricity Rate", rate: `${onPremSecurityOption.opEx.monthlyKwh} kWh / mo @ $${workload.electricityKwhRate} / kWh` },
+        { service: "Air-Gapped Infrastructure Maintenance", rate: `$${monthlyMaintSec.toFixed(2)} / month` }
+      ],
+
+      bom: [
+        { item: `NVIDIA ${onPremSecurityOption.gpu.name} (${onPremSecurityOption.gpu.vram_gb}GB VRAM)`, type: "CapEx", qty: `${onPremSecurityOption.requiredGpuCount}x GPUs`, unitCost: `$${onPremSecurityOption.gpu.server_fitted_cost_usd.toLocaleString()}`, totalCost: onPremSecurityOption.capEx.gpuHardwareCost },
+        { item: `${onPremSecurityOption.platform.name}`, type: "CapEx", qty: "1x Server Chassis", unitCost: `$${onPremSecurityOption.platform.base_hardware_cost_usd.toLocaleString()}`, totalCost: onPremSecurityOption.platform.base_hardware_cost_usd },
+        { item: `Ollama Enclave + ${onPremSecurityOption.model.name}`, type: "Software", qty: "Air-Gapped", unitCost: "$0.00", totalCost: 0 },
+        { item: `Power Draw (${onPremSecurityOption.opEx.monthlyKwh} kWh / mo)`, type: "OpEx", qty: `${onPremSecurityOption.opEx.monthlyKwh} kWh`, unitCost: `$${workload.electricityKwhRate} / kWh`, totalCost: monthlyElecSec },
+        { item: `Secured Air-Gapped SysAdmin Overhead`, type: "OpEx", qty: "1 Enclave", unitCost: `$${monthlyMaintSec.toFixed(2)} / mo`, totalCost: monthlyMaintSec }
+      ],
+
+      calculationFormula: {
+        step1: `Initial Upfront CapEx = (${onPremSecurityOption.requiredGpuCount}x ${onPremSecurityOption.gpu.name} @ $${onPremSecurityOption.gpu.server_fitted_cost_usd}) + Chassis ($${onPremSecurityOption.platform.base_hardware_cost_usd}) = $${initialCapExSec.toLocaleString()}`,
+        step2: `Monthly CapEx Amortization = $${initialCapExSec.toLocaleString()} ÷ 36 Months = $${monthlyAmortSec.toFixed(2)} / mo`,
+        step3: `Monthly Electricity = ${onPremSecurityOption.opEx.monthlyKwh} kWh × $${workload.electricityKwhRate}/kWh = $${monthlyElecSec.toFixed(2)} / mo`,
+        step4: `Monthly Maintenance = $${monthlyMaintSec.toFixed(2)} / mo`,
+        step5: `Est. Monthly TCO = ($${initialCapExSec.toLocaleString()} ÷ 36) + $${monthlyElecSec.toFixed(2)} + $${monthlyMaintSec.toFixed(2)} = $${Math.round(monthlyCostSec).toLocaleString()} / mo`,
+        step6: `3-Year Total TCO = $${initialCapExSec.toLocaleString()} CapEx + (($${monthlyElecSec.toFixed(2)} Power + $${monthlyMaintSec.toFixed(2)} Maint) × 36 Mos) = $${Math.round(threeYearTCOSec).toLocaleString()}`
+      },
+
       components: [
         { name: "Hardware Engine", detail: `${onPremSecurityOption.requiredGpuCount}x NVIDIA ${onPremSecurityOption.gpu.name} (${onPremSecurityOption.totalVramProvidedGb}GB Total VRAM)` },
         { name: "Local LLM Serving", detail: `Ollama / vLLM running ${onPremSecurityOption.model.name}` },
@@ -172,22 +321,58 @@ class AIArchitectureRecommender {
     // RECOMMENDATION #3: ZERO-DEVOPS / INSTANT ELASTIC SCALABILITY
     // =========================================================================
     if (users > 500) {
-      // Large Scale Cloud: RunPod Secure Cloud or AWS Dedicated GPU
+      // Large Scale Cloud Dedicated GPU: RunPod / AWS Dedicated
       const cloudOption = this.calc.calculateCloudDeployOption('runpod', 2, workload); // A100 80GB
       
+      const initialCapExCloud = 0;
+      const monthlyComputeCloud = cloudOption.monthlyComputeCost;
+      const monthlyStorageCloud = cloudOption.storageCost;
+      const monthlyEgressCloud = cloudOption.egressCost;
+      const monthlyDevOpsCloud = cloudOption.devopsCost;
+      const monthlyOpExCloud = monthlyComputeCloud + monthlyStorageCloud + monthlyEgressCloud + monthlyDevOpsCloud;
+      const monthlyCostCloud = monthlyOpExCloud;
+      const threeYearTCOCloud = monthlyCostCloud * 36;
+      const oneYearTCOCloud = monthlyCostCloud * 12;
+
       rec3 = {
         rank: 3,
         title: "Managed Cloud GPU Cluster (RunPod / AWS Dedicated)",
         category: "Cloud Dedicated GPU Sizing",
         badgeText: "⚡ #3 High-Elasticity Cloud Dedicated",
         badgeClass: "badge-cyan",
-        monthlyCost: cloudOption.monthlyCost,
-        oneYearTCO: cloudOption.oneYearTCO,
-        threeYearTCO: cloudOption.threeYearTCO,
+        initialCapEx: initialCapExCloud,
+        monthlyOpEx: monthlyOpExCloud,
+        monthlyCost: monthlyCostCloud,
+        oneYearTCO: oneYearTCOCloud,
+        threeYearTCO: threeYearTCOCloud,
         latencyRating: "~300ms - 450ms",
         throughputTokensSec: 180,
         privacyRating: "Enterprise Cloud VPC (SOC2 / HIPAA Compliant)",
         devopsEffort: "Low-Medium (Managed Cloud Infrastructure)",
+
+        serviceRates: [
+          { service: `${cloudOption.instance.name}`, rate: `$1.89 per hour per GPU instance node` },
+          { service: "Enterprise Network Storage Array", rate: `$40.00 / month per node` },
+          { service: "Cloud Bandwidth Egress Rate", rate: `$0.01 per GB output data` },
+          { service: "Managed Cloud Infrastructure Ops", rate: `$250.00 / month` }
+        ],
+
+        bom: [
+          { item: `${cloudOption.instance.name}`, type: "OpEx", qty: `${cloudOption.requiredInstances}x Nodes (730 hrs/mo)`, unitCost: "$1.89 / hr", totalCost: monthlyComputeCloud },
+          { item: "High-Performance NVMe Cloud Storage Array", type: "OpEx", qty: `${cloudOption.requiredInstances}x Disks`, unitCost: "$40.00 / mo", totalCost: monthlyStorageCloud },
+          { item: "Network Egress Data Bandwidth", type: "OpEx", qty: "Output Traffic", unitCost: "$0.01 / GB", totalCost: monthlyEgressCloud },
+          { item: "Managed Cloud Container DevOps", type: "OpEx", qty: "1 Cluster", unitCost: "$250.00 / mo", totalCost: monthlyDevOpsCloud }
+        ],
+
+        calculationFormula: {
+          step1: `Initial Upfront CapEx = $0 (Zero Hardware Purchase)`,
+          step2: `Monthly Compute = ${cloudOption.requiredInstances}x Nodes × 730 hrs × $1.89/hr = $${monthlyComputeCloud.toFixed(2)} / mo`,
+          step3: `Monthly Storage & Egress = $${monthlyStorageCloud.toFixed(2)} Storage + $${monthlyEgressCloud.toFixed(2)} Egress = $${(monthlyStorageCloud + monthlyEgressCloud).toFixed(2)} / mo`,
+          step4: `Monthly DevOps Ops = $${monthlyDevOpsCloud.toFixed(2)} / mo`,
+          step5: `Est. Monthly TCO = ($0 CapEx ÷ 36) + $${monthlyComputeCloud.toFixed(2)} + $${(monthlyStorageCloud + monthlyEgressCloud).toFixed(2)} + $${monthlyDevOpsCloud.toFixed(2)} = $${Math.round(monthlyCostCloud).toLocaleString()} / mo`,
+          step6: `3-Year Total TCO = $0 CapEx + ($${Math.round(monthlyCostCloud).toLocaleString()} / mo × 36 Months) = $${Math.round(threeYearTCOCloud).toLocaleString()}`
+        },
+
         components: [
           { name: "Cloud GPU Instance", detail: `${cloudOption.requiredInstances}x RunPod Secure Cloud / AWS A100 (80GB SXM4)` },
           { name: "Model Stack", detail: "vLLM Container on Kubernetes with Auto-Scaling" },
@@ -206,22 +391,55 @@ class AIArchitectureRecommender {
         architectRationale: "Provides dedicated enterprise GPU power without managing physical server rooms, delivering instant elastic capacity with enterprise security guarantees."
       };
     } else {
-      // Small to Mid Scale: Managed Frontier API Gateway (ChatGPT GPT-4o / Claude 3.5 Sonnet)
+      // Small to Mid Scale: Commercial Managed Frontier API Gateway (Claude 3.5 Sonnet / ChatGPT)
       const apiOption = this.calc.calculateCloudLLMOption('claude_anthropic', 'claude_3_5_sonnet', workload);
-      
+
+      const initialCapExApi = 0;
+      const monthlyPromptCost = apiOption.promptCost;
+      const monthlyCompletionCost = apiOption.completionCost;
+      const monthlyMaintenanceApi = apiOption.apiMaintenanceCost;
+      const monthlyOpExApi = monthlyPromptCost + monthlyCompletionCost + monthlyMaintenanceApi;
+      const monthlyCostApi = monthlyOpExApi;
+      const threeYearTCOApi = monthlyCostApi * 36;
+      const oneYearTCOApi = monthlyCostApi * 12;
+
       rec3 = {
         rank: 3,
         title: "Frontier Managed API Gateway (Claude 3.5 Sonnet / GPT-4o)",
         category: "Managed Frontier LLM API",
         badgeText: "🧠 #3 State-of-the-Art Frontier Intelligence",
         badgeClass: "badge-cyan",
-        monthlyCost: apiOption.monthlyCost,
-        oneYearTCO: apiOption.oneYearTCO,
-        threeYearTCO: apiOption.threeYearTCO,
+        initialCapEx: initialCapExApi,
+        monthlyOpEx: monthlyOpExApi,
+        monthlyCost: monthlyCostApi,
+        oneYearTCO: oneYearTCOApi,
+        threeYearTCO: threeYearTCOApi,
         latencyRating: "~450ms - 900ms",
         throughputTokensSec: 120,
         privacyRating: "Commercial API Terms (Zero Training on Customer Data)",
         devopsEffort: "Zero (Pure REST API Integration)",
+
+        serviceRates: [
+          { service: `${apiOption.model.name} Input Prompt Tokens`, rate: `$${apiOption.model.input_cost_per_1m.toFixed(2)} per 1,000,000 tokens` },
+          { service: `${apiOption.model.name} Output Completion Tokens`, rate: `$${apiOption.model.output_cost_per_1m.toFixed(2)} per 1,000,000 tokens` },
+          { service: "API Gateway Integration & Proxy Upkeep", rate: `$${monthlyMaintenanceApi.toFixed(2)} / month flat` }
+        ],
+
+        bom: [
+          { item: `Input Prompt Token Demand`, type: "OpEx", qty: `${(workload.monthlyPromptTokens / 1000000).toFixed(1)}M tokens / mo`, unitCost: `$${apiOption.model.input_cost_per_1m.toFixed(2)} / 1M`, totalCost: monthlyPromptCost },
+          { item: `Output Completion Token Demand`, type: "OpEx", qty: `${(workload.monthlyCompletionTokens / 1000000).toFixed(1)}M tokens / mo`, unitCost: `$${apiOption.model.output_cost_per_1m.toFixed(2)} / 1M`, totalCost: monthlyCompletionCost },
+          { item: `API Key Security & Integration Maintenance`, type: "OpEx", qty: "1 Integration", unitCost: `$${monthlyMaintenanceApi.toFixed(2)} / mo`, totalCost: monthlyMaintenanceApi }
+        ],
+
+        calculationFormula: {
+          step1: `Initial Upfront CapEx = $0 (Zero Hardware Purchase)`,
+          step2: `Monthly Prompt Cost = (${(workload.monthlyPromptTokens / 1000000).toFixed(1)}M tokens × $${apiOption.model.input_cost_per_1m.toFixed(2)}/1M) = $${monthlyPromptCost.toFixed(2)} / mo`,
+          step3: `Monthly Completion Cost = (${(workload.monthlyCompletionTokens / 1000000).toFixed(1)}M tokens × $${apiOption.model.output_cost_per_1m.toFixed(2)}/1M) = $${monthlyCompletionCost.toFixed(2)} / mo`,
+          step4: `Monthly Maintenance = $${monthlyMaintenanceApi.toFixed(2)} / mo`,
+          step5: `Est. Monthly TCO = ($0 CapEx ÷ 36) + $${monthlyPromptCost.toFixed(2)} + $${monthlyCompletionCost.toFixed(2)} + $${monthlyMaintenanceApi.toFixed(2)} = $${Math.round(monthlyCostApi).toLocaleString()} / mo`,
+          step6: `3-Year Total TCO = $0 CapEx + ($${Math.round(monthlyCostApi).toLocaleString()} / mo × 36 Months) = $${Math.round(threeYearTCOApi).toLocaleString()}`
+        },
+
         components: [
           { name: "Frontier Model API", detail: `${apiOption.provider.provider_name} - ${apiOption.model.name}` },
           { name: "Context Window", detail: `${apiOption.model.context_window.toLocaleString()} tokens` },

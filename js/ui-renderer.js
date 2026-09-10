@@ -1,6 +1,6 @@
 /**
  * UI Renderer for Enterprise AI Server Resource Analysis (Tailwind CSS v3 Edition)
- * Handles DOM generation, component updates, architecture cards, comparison tables, and interactivity.
+ * Handles DOM generation, component updates, itemized BOM costs, service rate cards, and calculation formulas.
  */
 
 class AIUIRenderer {
@@ -23,7 +23,7 @@ class AIUIRenderer {
   }
 
   /**
-   * Render Top 3 Recommendation Cards with Tailwind CSS
+   * Render Top 3 Recommendation Cards with Itemized BOM Pricing & Calculation Formulas
    */
   renderRecommendations(containerId, recommendations) {
     const container = document.getElementById(containerId);
@@ -34,7 +34,7 @@ class AIUIRenderer {
       return;
     }
 
-    let html = '<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">';
+    let html = '<div class="grid grid-cols-1 gap-8">';
 
     recommendations.forEach((rec) => {
       const isTopPick = rec.rank === 1;
@@ -48,90 +48,173 @@ class AIUIRenderer {
       }
 
       html += `
-        <div class="relative flex flex-col justify-between rounded-2xl p-6 transition-all duration-300 backdrop-blur-xl border ${
+        <div class="relative flex flex-col justify-between rounded-3xl p-6 sm:p-8 transition-all duration-300 backdrop-blur-xl border ${
           isTopPick 
-            ? 'bg-gradient-to-b from-slate-900/95 via-slate-900/80 to-slate-950/90 border-amber-500/40 shadow-[0_10px_30px_rgba(0,0,0,0.5),0_0_20px_rgba(251,191,36,0.15)] ring-1 ring-amber-500/30 -translate-y-1' 
-            : 'bg-slate-900/70 hover:bg-slate-900/90 border-slate-800 hover:border-slate-700 shadow-lg hover:-translate-y-1'
+            ? 'bg-gradient-to-b from-slate-900/95 via-slate-900/85 to-slate-950/90 border-amber-500/40 shadow-[0_10px_35px_rgba(0,0,0,0.5),0_0_25px_rgba(251,191,36,0.15)] ring-1 ring-amber-500/30' 
+            : 'bg-slate-900/75 border-slate-800 shadow-xl'
         }">
           
           <div>
-            <!-- Header -->
-            <div class="flex items-center justify-between gap-2 mb-3">
-              <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold border ${badgeStyle}">
-                ${rec.badgeText}
-              </span>
-              <span class="text-xs font-medium text-slate-400">
-                ${rec.category}
-              </span>
+            <!-- Header Badge & Category -->
+            <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
+              <div class="flex items-center gap-3">
+                <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-extrabold border ${badgeStyle}">
+                  ${rec.badgeText}
+                </span>
+                <span class="text-xs font-semibold text-slate-400">
+                  ${rec.category}
+                </span>
+              </div>
+              <div class="text-xs text-slate-400">
+                ⚡ Latency: <strong class="text-slate-200">${rec.latencyRating}</strong>
+              </div>
             </div>
 
-            <h3 class="text-lg font-bold text-white mb-4 min-h-[52px] flex items-center">
+            <!-- Title -->
+            <h3 class="text-xl sm:text-2xl font-bold text-white mb-6">
               ${rec.title}
             </h3>
 
-            <!-- Cost Hero Box -->
-            <div class="bg-slate-950/70 border border-slate-800/80 rounded-xl p-4 flex items-center justify-between mb-5">
-              <div>
-                <span class="block text-[11px] font-semibold uppercase tracking-wider text-slate-400">Est. Monthly TCO</span>
-                <span class="font-mono text-2xl font-black ${isTopPick ? 'text-amber-400' : 'text-sky-400'}">
-                  ${this.formatMoney(rec.monthlyCost)}
+            <!-- FINANCIAL COST OVERVIEW HERO BANNER -->
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 bg-slate-950/80 border border-slate-800/90 rounded-2xl p-4 sm:p-5 mb-6">
+              
+              <div class="bg-slate-900/60 border border-slate-800/80 rounded-xl p-3.5">
+                <span class="block text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-1">Initial CapEx (Upfront)</span>
+                <span class="font-mono text-xl sm:text-2xl font-black text-white">
+                  ${this.formatMoney(rec.initialCapEx)}
                 </span>
+                <span class="block text-[10px] text-slate-500 mt-1">Hardware / Setup</span>
               </div>
-              <div class="text-right">
-                <span class="block text-[11px] font-semibold uppercase tracking-wider text-slate-400">3-Yr Total TCO</span>
-                <span class="font-mono text-base font-bold text-slate-300">
+
+              <div class="bg-slate-900/60 border border-slate-800/80 rounded-xl p-3.5">
+                <span class="block text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-1">Monthly OpEx / Maint</span>
+                <span class="font-mono text-xl sm:text-2xl font-black text-sky-400">
+                  ${this.formatMoney(rec.monthlyOpEx)} <span class="text-xs font-normal text-slate-400">/ mo</span>
+                </span>
+                <span class="block text-[10px] text-slate-500 mt-1">Power + Tokens + Maint</span>
+              </div>
+
+              <div class="bg-slate-900/60 border border-slate-800/80 rounded-xl p-3.5">
+                <span class="block text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-1">Est. Monthly TCO</span>
+                <span class="font-mono text-xl sm:text-2xl font-black ${isTopPick ? 'text-amber-400' : 'text-purple-400'}">
+                  ${this.formatMoney(rec.monthlyCost)} <span class="text-xs font-normal text-slate-400">/ mo</span>
+                </span>
+                <span class="block text-[10px] text-slate-500 mt-1">(CapEx ÷ 36) + OpEx</span>
+              </div>
+
+              <div class="bg-slate-900/60 border border-slate-800/80 rounded-xl p-3.5">
+                <span class="block text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-1">3-Year Total TCO</span>
+                <span class="font-mono text-xl sm:text-2xl font-black text-slate-100">
                   ${this.formatMoney(rec.threeYearTCO)}
                 </span>
+                <span class="block text-[10px] text-slate-500 mt-1">CapEx + (OpEx × 36)</span>
               </div>
+
             </div>
 
-            <!-- Specs Rows -->
-            <div class="space-y-2 text-xs mb-5 pb-4 border-b border-slate-800/80">
-              <div class="flex justify-between items-center">
-                <span class="text-slate-400">⚡ Latency Profile:</span>
-                <span class="font-semibold text-white">${rec.latencyRating}</span>
+            <!-- SERVICE ACCOUNT RATES CARD BOX -->
+            <div class="bg-slate-950/40 border border-slate-800/60 rounded-2xl p-4 mb-6">
+              <div class="text-xs font-bold uppercase tracking-wider text-sky-400 mb-3 flex items-center gap-1.5">
+                <span>💳</span> Account & Service Unit Rates:
               </div>
-              <div class="flex justify-between items-center">
-                <span class="text-slate-400">🔒 Privacy & SLA:</span>
-                <span class="font-semibold text-slate-200">${rec.privacyRating}</span>
-              </div>
-              <div class="flex justify-between items-center">
-                <span class="text-slate-400">🛠️ DevOps Effort:</span>
-                <span class="font-semibold text-slate-200">${rec.devopsEffort}</span>
-              </div>
-            </div>
-
-            <!-- Architecture Components -->
-            <div class="bg-slate-950/40 rounded-xl p-3.5 mb-4 border border-slate-800/50">
-              <div class="text-xs font-bold uppercase tracking-wider text-sky-400 mb-2">Architecture Bill of Materials:</div>
-              <ul class="space-y-1.5 text-xs text-slate-300">
-                ${rec.components.map(c => `
-                  <li class="flex items-start gap-1.5">
-                    <span class="text-sky-400 font-bold">•</span>
-                    <span><strong class="text-slate-100">${c.name}:</strong> <span class="text-slate-400">${c.detail}</span></span>
-                  </li>
+              <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5 text-xs">
+                ${(rec.serviceRates || []).map(sr => `
+                  <div class="bg-slate-900/70 border border-slate-800 rounded-xl p-2.5">
+                    <div class="font-bold text-slate-200 mb-0.5">${sr.service}</div>
+                    <div class="font-mono text-sky-300 font-semibold">${sr.rate}</div>
+                  </div>
                 `).join('')}
-              </ul>
+              </div>
+            </div>
+
+            <!-- ITEMIZED BILL OF MATERIALS (BOM) COST TABLE -->
+            <div class="bg-slate-950/60 border border-slate-800/80 rounded-2xl overflow-hidden mb-6">
+              <div class="px-4 py-3 bg-slate-950 border-b border-slate-800 flex items-center justify-between">
+                <span class="text-xs font-bold uppercase tracking-wider text-amber-400 flex items-center gap-1.5">
+                  <span>📋</span> Bill of Materials (BOM) Itemized Breakdown
+                </span>
+                <span class="text-[11px] font-semibold text-slate-400">Total BOM Cost Rates</span>
+              </div>
+              <div class="overflow-x-auto custom-scrollbar">
+                <table class="w-full text-left text-xs text-slate-300">
+                  <thead class="bg-slate-900/80 text-slate-400 font-semibold uppercase text-[10px] tracking-wider border-b border-slate-800">
+                    <tr>
+                      <th class="px-4 py-2.5">Component / Item Description</th>
+                      <th class="px-3 py-2.5">Cost Type</th>
+                      <th class="px-3 py-2.5">Qty / Demand</th>
+                      <th class="px-3 py-2.5">Unit Rate</th>
+                      <th class="px-4 py-2.5 text-right">Total Cost</th>
+                    </tr>
+                  </thead>
+                  <tbody class="divide-y divide-slate-800/60 font-medium">
+                    ${(rec.bom || []).map(b => `
+                      <tr class="hover:bg-slate-900/40 transition">
+                        <td class="px-4 py-3 text-slate-100 font-bold">${b.item}</td>
+                        <td class="px-3 py-3">
+                          <span class="inline-block px-2 py-0.5 rounded text-[10px] font-bold ${
+                            b.type === 'CapEx' ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30' :
+                            (b.type === 'OpEx' ? 'bg-sky-500/20 text-sky-300 border border-sky-500/30' : 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30')
+                          }">
+                            ${b.type}
+                          </span>
+                        </td>
+                        <td class="px-3 py-3 font-mono text-slate-300">${b.qty}</td>
+                        <td class="px-3 py-3 font-mono text-slate-400">${b.unitCost}</td>
+                        <td class="px-4 py-3 font-mono font-bold text-right ${b.type === 'CapEx' ? 'text-amber-400' : 'text-sky-400'}">
+                          ${this.formatMoney(b.totalCost)}
+                        </td>
+                      </tr>
+                    `).join('')}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- HOW TO CALCULATE IT (CALCULATION FORMULA BOX) -->
+            <div class="bg-indigo-950/20 border border-indigo-500/30 rounded-2xl p-5 mb-6">
+              <div class="text-xs font-bold text-indigo-300 mb-3 flex items-center gap-1.5 uppercase tracking-wider">
+                <span>🧮</span> Step-by-Step TCO Calculation Breakdown:
+              </div>
+              <div class="font-mono text-xs space-y-2 text-slate-300 leading-relaxed">
+                <div class="p-2 rounded bg-slate-950/60 border border-indigo-900/50">
+                  <span class="text-amber-400 font-bold">1. Upfront CapEx:</span> ${rec.calculationFormula.step1}
+                </div>
+                <div class="p-2 rounded bg-slate-950/60 border border-indigo-900/50">
+                  <span class="text-sky-400 font-bold">2. Monthly Amortization:</span> ${rec.calculationFormula.step2}
+                </div>
+                <div class="p-2 rounded bg-slate-950/60 border border-indigo-900/50">
+                  <span class="text-purple-400 font-bold">3. Compute / Power Rate:</span> ${rec.calculationFormula.step3}
+                </div>
+                <div class="p-2 rounded bg-slate-950/60 border border-indigo-900/50">
+                  <span class="text-emerald-400 font-bold">4. Monthly Maintenance:</span> ${rec.calculationFormula.step4}
+                </div>
+                <div class="p-2.5 rounded bg-slate-900/90 border border-sky-500/40 text-white font-bold">
+                  <span class="text-sky-300">5. Est. Monthly TCO:</span> ${rec.calculationFormula.step5}
+                </div>
+                <div class="p-2.5 rounded bg-slate-900/90 border border-amber-500/40 text-white font-bold">
+                  <span class="text-amber-300">6. 3-Year Total TCO:</span> ${rec.calculationFormula.step6}
+                </div>
+              </div>
             </div>
 
             <!-- Architect Rationale -->
-            <div class="bg-sky-950/20 border-l-2 border-sky-400 rounded-r-xl p-3 mb-5">
-              <div class="text-xs font-bold text-sky-300 mb-1">💡 Architect Rationale:</div>
-              <p class="text-xs text-slate-300 leading-relaxed">${rec.architectRationale}</p>
+            <div class="bg-sky-950/20 border-l-4 border-sky-400 rounded-r-2xl p-4 mb-6">
+              <div class="text-xs font-bold text-sky-300 mb-1">💡 Solution Architect Rationale:</div>
+              <p class="text-xs sm:text-sm text-slate-300 leading-relaxed">${rec.architectRationale}</p>
             </div>
           </div>
 
-          <!-- Pros & Highlights -->
-          <div class="pt-3 border-t border-slate-800/60">
-            <div class="text-[11px] font-bold uppercase tracking-wider text-emerald-400 mb-2">Key Advantages:</div>
-            <ul class="space-y-1 text-xs text-slate-400">
-              ${rec.pros.slice(0, 3).map(p => `
-                <li class="flex items-center gap-1.5">
-                  <span class="text-emerald-400 text-xs">✓</span>
+          <!-- Pros & Key Highlights Footer -->
+          <div class="pt-4 border-t border-slate-800/80">
+            <div class="text-xs font-bold uppercase tracking-wider text-emerald-400 mb-2">Key Strategic Advantages:</div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs text-slate-300">
+              ${rec.pros.map(p => `
+                <div class="flex items-center gap-2">
+                  <span class="text-emerald-400 font-bold text-sm">✓</span>
                   <span>${p}</span>
-                </li>
+                </div>
               `).join('')}
-            </ul>
+            </div>
           </div>
 
         </div>
