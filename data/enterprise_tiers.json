@@ -1,0 +1,65 @@
+{
+  "currency": "USD",
+  "presets": [
+    {
+      "id": "startup",
+      "label": "AI Startup / Sandbox",
+      "active_users": 10,
+      "queries_per_user_day": 15,
+      "avg_prompt_tokens": 600,
+      "avg_completion_tokens": 400,
+      "concurrency_factor": 0.20,
+      "data_privacy_level": "standard",
+      "uptime_sla": "99.0%",
+      "description": "Small product team or internal innovation lab testing generative AI features."
+    },
+    {
+      "id": "smb",
+      "label": "Small & Medium Business",
+      "active_users": 50,
+      "queries_per_user_day": 25,
+      "avg_prompt_tokens": 800,
+      "avg_completion_tokens": 500,
+      "concurrency_factor": 0.25,
+      "data_privacy_level": "standard",
+      "uptime_sla": "99.5%",
+      "description": "Departmental workflow automation (Customer support, sales summaries, draft generation)."
+    },
+    {
+      "id": "midmarket",
+      "label": "Mid-Market Enterprise",
+      "active_users": 250,
+      "queries_per_user_day": 35,
+      "avg_prompt_tokens": 1200,
+      "avg_completion_tokens": 650,
+      "concurrency_factor": 0.30,
+      "data_privacy_level": "strict",
+      "uptime_sla": "99.9%",
+      "description": "Company-wide internal knowledge base, RAG assistant, and developer copilot tool."
+    },
+    {
+      "id": "enterprise",
+      "label": "Large Enterprise",
+      "active_users": 1000,
+      "queries_per_user_day": 45,
+      "avg_prompt_tokens": 1500,
+      "avg_completion_tokens": 800,
+      "concurrency_factor": 0.35,
+      "data_privacy_level": "strict",
+      "uptime_sla": "99.99%",
+      "description": "Multi-departmental production AI infrastructure handling customer-facing and sensitive internal data."
+    },
+    {
+      "id": "tech_giant",
+      "label": "Global Tech / Financial Corp",
+      "active_users": 5000,
+      "queries_per_user_day": 60,
+      "avg_prompt_tokens": 2000,
+      "avg_completion_tokens": 1000,
+      "concurrency_factor": 0.40,
+      "data_privacy_level": "air_gapped",
+      "uptime_sla": "99.999%",
+      "description": "High-throughput mission-critical infrastructure with strict banking/HIPAA compliance."
+    }
+  ]
+}

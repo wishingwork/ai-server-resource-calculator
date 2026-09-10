@@ -1,0 +1,181 @@
+{
+  "currency": "USD",
+  "providers": [
+    {
+      "id": "chatgpt_openai",
+      "provider_name": "ChatGPT / OpenAI",
+      "brand_color": "#10a37f",
+      "models": [
+        {
+          "id": "gpt_4o",
+          "name": "GPT-4o (Omni Frontier)",
+          "input_cost_per_1m": 2.50,
+          "output_cost_per_1m": 10.00,
+          "cached_input_cost_per_1m": 1.25,
+          "context_window": 128000,
+          "max_output_tokens": 16384,
+          "benchmark_score": 98,
+          "tier": "Flagship",
+          "ideal_use_case": "Complex business analysis, coding architecture, agentic decision making"
+        },
+        {
+          "id": "gpt_4o_mini",
+          "name": "GPT-4o mini (Fast & Budget)",
+          "input_cost_per_1m": 0.15,
+          "output_cost_per_1m": 0.60,
+          "cached_input_cost_per_1m": 0.075,
+          "context_window": 128000,
+          "max_output_tokens": 16384,
+          "benchmark_score": 88,
+          "tier": "Economy",
+          "ideal_use_case": "High-volume customer support, classification, summarization"
+        },
+        {
+          "id": "o1_reasoning",
+          "name": "o1 (Deep Reasoning Engine)",
+          "input_cost_per_1m": 15.00,
+          "output_cost_per_1m": 60.00,
+          "cached_input_cost_per_1m": 7.50,
+          "context_window": 200000,
+          "max_output_tokens": 100000,
+          "benchmark_score": 100,
+          "tier": "Reasoning Specialist",
+          "ideal_use_case": "Complex mathematical modeling, competitive coding, rigorous auditing"
+        },
+        {
+          "id": "o3_mini",
+          "name": "o3-mini (High-Speed Reasoning)",
+          "input_cost_per_1m": 1.10,
+          "output_cost_per_1m": 4.40,
+          "cached_input_cost_per_1m": 0.55,
+          "context_window": 200000,
+          "max_output_tokens": 100000,
+          "benchmark_score": 94,
+          "tier": "Reasoning Economy",
+          "ideal_use_case": "Fast STEM reasoning, technical documentation synthesis"
+        }
+      ],
+      "data_privacy_sla": "Business / Enterprise API tier provides zero data retention for training, SOC2 Type II, HIPAA BAA."
+    },
+    {
+      "id": "claude_anthropic",
+      "provider_name": "Claude / Anthropic",
+      "brand_color": "#d97706",
+      "models": [
+        {
+          "id": "claude_3_5_sonnet",
+          "name": "Claude 3.5 Sonnet",
+          "input_cost_per_1m": 3.00,
+          "output_cost_per_1m": 15.00,
+          "cached_input_cost_per_1m": 0.30,
+          "context_window": 200000,
+          "max_output_tokens": 8192,
+          "benchmark_score": 99,
+          "tier": "Flagship",
+          "ideal_use_case": "Elite software engineering, nuanced writing, complex reasoning, visual diagram parsing"
+        },
+        {
+          "id": "claude_3_5_haiku",
+          "name": "Claude 3.5 Haiku",
+          "input_cost_per_1m": 0.80,
+          "output_cost_per_1m": 4.00,
+          "cached_input_cost_per_1m": 0.08,
+          "context_window": 200000,
+          "max_output_tokens": 8192,
+          "benchmark_score": 89,
+          "tier": "Economy",
+          "ideal_use_case": "Rapid API middleware, fast customer chatbots, high-throughput log analysis"
+        },
+        {
+          "id": "claude_3_opus",
+          "name": "Claude 3 Opus",
+          "input_cost_per_1m": 15.00,
+          "output_cost_per_1m": 75.00,
+          "cached_input_cost_per_1m": 1.50,
+          "context_window": 200000,
+          "max_output_tokens": 4096,
+          "benchmark_score": 95,
+          "tier": "Heavyweights",
+          "ideal_use_case": "Deep philosophical reasoning, executive speechwriting, extensive research"
+        }
+      ],
+      "data_privacy_sla": "Anthropic Commercial Terms: Customer inputs and outputs are never used to train models."
+    },
+    {
+      "id": "gemini_google",
+      "provider_name": "Gemini / Google Cloud",
+      "brand_color": "#3b82f6",
+      "models": [
+        {
+          "id": "gemini_1_5_pro",
+          "name": "Gemini 1.5 Pro (2M Context)",
+          "input_cost_per_1m": 1.25,
+          "output_cost_per_1m": 5.00,
+          "cached_input_cost_per_1m": 0.31,
+          "context_window": 2097152,
+          "max_output_tokens": 8192,
+          "benchmark_score": 96,
+          "tier": "Long-Context Flagship",
+          "ideal_use_case": "Whole codebase analysis, hours of video/audio transcription, multi-volume books"
+        },
+        {
+          "id": "gemini_2_0_flash",
+          "name": "Gemini 2.0 Flash (Next-Gen Realtime)",
+          "input_cost_per_1m": 0.10,
+          "output_cost_per_1m": 0.40,
+          "cached_input_cost_per_1m": 0.025,
+          "context_window": 1048576,
+          "max_output_tokens": 8192,
+          "benchmark_score": 92,
+          "tier": "Economy Ultra",
+          "ideal_use_case": "Real-time multimodal voice/video streaming, high-speed automated agents"
+        },
+        {
+          "id": "gemini_1_5_flash",
+          "name": "Gemini 1.5 Flash",
+          "input_cost_per_1m": 0.075,
+          "output_cost_per_1m": 0.30,
+          "cached_input_cost_per_1m": 0.01875,
+          "context_window": 1048576,
+          "max_output_tokens": 8192,
+          "benchmark_score": 87,
+          "tier": "Economy",
+          "ideal_use_case": "High-throughput enterprise document processing at ultra-low cost"
+        }
+      ],
+      "data_privacy_sla": "Google Cloud Vertex AI guarantees enterprise isolation, zero data sharing, VPC-SC compatibility."
+    },
+    {
+      "id": "grok_xai",
+      "provider_name": "Grok / xAI",
+      "brand_color": "#111827",
+      "models": [
+        {
+          "id": "grok_2",
+          "name": "Grok 2",
+          "input_cost_per_1m": 2.00,
+          "output_cost_per_1m": 10.00,
+          "cached_input_cost_per_1m": 1.00,
+          "context_window": 131072,
+          "max_output_tokens": 4096,
+          "benchmark_score": 94,
+          "tier": "Flagship",
+          "ideal_use_case": "Real-time knowledge integration, creative writing, vision synthesis"
+        },
+        {
+          "id": "grok_2_mini",
+          "name": "Grok 2 mini",
+          "input_cost_per_1m": 0.20,
+          "output_cost_per_1m": 1.00,
+          "cached_input_cost_per_1m": 0.10,
+          "context_window": 131072,
+          "max_output_tokens": 4096,
+          "benchmark_score": 86,
+          "tier": "Economy",
+          "ideal_use_case": "Speed-optimized queries, conversational UI"
+        }
+      ],
+      "data_privacy_sla": "xAI Enterprise API agreement provides data confidentiality and commercial compliance terms."
+    }
+  ]
+}

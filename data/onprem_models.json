@@ -1,0 +1,134 @@
+{
+  "runtimes": [
+    {
+      "id": "ollama",
+      "name": "Ollama (vLLM / llama.cpp Core)",
+      "type": "Self-Hosted Runner",
+      "features": ["Zero configuration", "Modelfile customization", "OpenAI-compatible REST API", "GPU auto-offloading"],
+      "kv_cache_efficiency": "High (PagedAttention in vLLM / GGUF in llama.cpp)",
+      "overhead_vram_gb": 1.2
+    },
+    {
+      "id": "vllm_engine",
+      "name": "vLLM High-Throughput Production Engine",
+      "type": "Production Serving",
+      "features": ["Continuous Batching", "PagedAttention", "Tensor Parallelism", "High Concurrency RPS"],
+      "kv_cache_efficiency": "Ultra-High",
+      "overhead_vram_gb": 2.0
+    }
+  ],
+  "models": [
+    {
+      "id": "qwen_2_5_72b",
+      "family": "Qwen",
+      "name": "Qwen 2.5 (72B-Instruct)",
+      "parameters_billion": 72,
+      "context_window_tokens": 131072,
+      "recommended_quantization": "Q4_K_M (4-bit)",
+      "vram_required_weights_gb": 42.0,
+      "vram_kv_cache_per_1k_tokens_gb": 0.28,
+      "min_recommended_gpus": "2x RTX 5090 (64GB) or 2x RTX 4090 (48GB)",
+      "performance_quality_score": 96,
+      "tokens_per_sec_base": 48,
+      "description": "State-of-the-art open weight reasoning & coding model rivaling proprietary frontier models."
+    },
+    {
+      "id": "qwen_2_5_32b",
+      "family": "Qwen",
+      "name": "Qwen 2.5 (32B-Instruct)",
+      "parameters_billion": 32,
+      "context_window_tokens": 131072,
+      "recommended_quantization": "Q4_K_M (4-bit)",
+      "vram_required_weights_gb": 19.5,
+      "vram_kv_cache_per_1k_tokens_gb": 0.16,
+      "min_recommended_gpus": "1x RTX 5090 (32GB) or 1x RTX 4090 (24GB)",
+      "performance_quality_score": 91,
+      "tokens_per_sec_base": 65,
+      "description": "Sweet spot of enterprise capability, high speed, and single-GPU 24GB/32GB fitting."
+    },
+    {
+      "id": "qwen_2_5_14b",
+      "family": "Qwen",
+      "name": "Qwen 2.5 (14B-Instruct)",
+      "parameters_billion": 14,
+      "context_window_tokens": 131072,
+      "recommended_quantization": "Q4_K_M / Q8",
+      "vram_required_weights_gb": 9.2,
+      "vram_kv_cache_per_1k_tokens_gb": 0.10,
+      "min_recommended_gpus": "1x RTX 5080 (16GB) or 1x RTX 4070 Ti Super (16GB)",
+      "performance_quality_score": 84,
+      "tokens_per_sec_base": 92,
+      "description": "Extremely fast enterprise model for document parsing, summarization, and internal agent workflows."
+    },
+    {
+      "id": "qwen_2_5_7b",
+      "family": "Qwen",
+      "name": "Qwen 2.5 (7B-Instruct)",
+      "parameters_billion": 7,
+      "context_window_tokens": 131072,
+      "recommended_quantization": "Q4_K_M / FP16",
+      "vram_required_weights_gb": 5.2,
+      "vram_kv_cache_per_1k_tokens_gb": 0.06,
+      "min_recommended_gpus": "1x RTX 3080 Ti (12GB) or RTX 4070 (12GB)",
+      "performance_quality_score": 76,
+      "tokens_per_sec_base": 125,
+      "description": "Ultra-lightweight, high-speed model for high-frequency low-latency classification and extraction."
+    },
+    {
+      "id": "gemma_2_27b",
+      "family": "Gemma",
+      "name": "Google Gemma 2 (27B-IT)",
+      "parameters_billion": 27,
+      "context_window_tokens": 8192,
+      "recommended_quantization": "Q4_K_M (4-bit)",
+      "vram_required_weights_gb": 16.8,
+      "vram_kv_cache_per_1k_tokens_gb": 0.14,
+      "min_recommended_gpus": "1x RTX 5090 (32GB) or 1x RTX 4090 (24GB)",
+      "performance_quality_score": 89,
+      "tokens_per_sec_base": 58,
+      "description": "Google's high-efficiency open model built with advanced distillation architecture."
+    },
+    {
+      "id": "gemma_2_9b",
+      "family": "Gemma",
+      "name": "Google Gemma 2 (9B-IT)",
+      "parameters_billion": 9,
+      "context_window_tokens": 8192,
+      "recommended_quantization": "Q4_K_M / Q8",
+      "vram_required_weights_gb": 6.4,
+      "vram_kv_cache_per_1k_tokens_gb": 0.08,
+      "min_recommended_gpus": "1x RTX 5070 Ti (16GB) or RTX 3090 (24GB)",
+      "performance_quality_score": 81,
+      "tokens_per_sec_base": 105,
+      "description": "Exceptional capability-per-parameter with very low memory footprint."
+    },
+    {
+      "id": "kimi_moonshot_open",
+      "family": "Kimi",
+      "name": "Kimi / Moonshot (Enterprise Open / Mooncake)",
+      "parameters_billion": 32,
+      "context_window_tokens": 200000,
+      "recommended_quantization": "Q4_K_M / FP8",
+      "vram_required_weights_gb": 22.0,
+      "vram_kv_cache_per_1k_tokens_gb": 0.22,
+      "min_recommended_gpus": "1x RTX 5090 (32GB) or 2x RTX 4090 (48GB)",
+      "performance_quality_score": 90,
+      "tokens_per_sec_base": 52,
+      "description": "Long-context specialist optimized for deep enterprise repository indexing and contract review."
+    },
+    {
+      "id": "minimax_abab",
+      "family": "Minimax",
+      "name": "MiniMax (ABAB 6.5 / Open MoE)",
+      "parameters_billion": 45,
+      "context_window_tokens": 65536,
+      "recommended_quantization": "Q4_K_M / MoE Sparse Active",
+      "vram_required_weights_gb": 28.5,
+      "vram_kv_cache_per_1k_tokens_gb": 0.20,
+      "min_recommended_gpus": "1x RTX 5090 (32GB) or 2x RTX 4090 (48GB)",
+      "performance_quality_score": 92,
+      "tokens_per_sec_base": 68,
+      "description": "Sparse Mixture-of-Experts (MoE) architecture offering rapid inference for multi-turn enterprise dialogues."
+    }
+  ]
+}

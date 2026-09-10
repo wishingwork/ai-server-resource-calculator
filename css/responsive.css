@@ -1,0 +1,152 @@
+/* ==========================================================================
+   RESPONSIVE LAYOUTS & EXECUTIVE PRINT STYLES
+   ========================================================================== */
+
+/* Tablet (max-width: 1024px) */
+@media (max-width: 1024px) {
+  .inputs-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .recommendations-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .comparison-cards-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .charts-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .configurators-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .kpis-banner {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* Mobile (max-width: 640px) */
+@media (max-width: 640px) {
+  .app-container {
+    padding: 16px 14px 40px 14px;
+  }
+
+  .app-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 16px;
+  }
+
+  .header-controls {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .inputs-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .kpis-banner {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .preset-container {
+    overflow-x: auto;
+    padding-bottom: 6px;
+    flex-wrap: nowrap;
+  }
+
+  .preset-btn {
+    white-space: nowrap;
+  }
+
+  .workload-panel {
+    padding: 18px 14px;
+  }
+
+  .rec-card, .matrix-card, .chart-card {
+    padding: 18px 14px;
+  }
+
+  .break-even-insight-box {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+/* Executive Print & PDF Styles */
+@media print {
+  body {
+    background: #ffffff !important;
+    color: #0f172a !important;
+  }
+
+  body::before, body::after {
+    display: none !important;
+  }
+
+  .app-container {
+    max-width: 100% !important;
+    padding: 0 !important;
+  }
+
+  .app-header {
+    background: #f8fafc !important;
+    border: 1px solid #cbd5e1 !important;
+    box-shadow: none !important;
+  }
+
+  .header-controls, .preset-container, .btn-primary, .btn-secondary {
+    display: none !important;
+  }
+
+  .workload-panel, .rec-card, .matrix-card, .chart-card, .configurators-section {
+    background: #ffffff !important;
+    border: 1px solid #e2e8f0 !important;
+    box-shadow: none !important;
+    color: #0f172a !important;
+    page-break-inside: avoid;
+  }
+
+  h1, h2, h3, h4, .rec-title, .matrix-name, .price-main {
+    color: #0f172a !important;
+  }
+
+  .text-gradient-cyan, .text-gradient-gold {
+    -webkit-text-fill-color: #0f172a !important;
+    color: #0f172a !important;
+  }
+
+  .rec-cost-banner, .matrix-price-hero, .kpi-block {
+    background: #f1f5f9 !important;
+    border: 1px solid #cbd5e1 !important;
+  }
+
+  .cost-value, .highlight-gold, .highlight-sky, .highlight-purple, .highlight-emerald {
+    color: #0369a1 !important;
+  }
+
+  p, .spec-label, .m-label, .cost-label, .kpi-title {
+    color: #475569 !important;
+  }
+
+  .spec-val, .m-val, .kpi-number {
+    color: #0f172a !important;
+  }
+
+  .break-even-insight-box {
+    background: #f8fafc !important;
+    border: 1px solid #cbd5e1 !important;
+    color: #0f172a !important;
+  }
+
+  .pulse-dot {
+    background: #0284c7 !important;
+    animation: none !important;
+  }
+}
