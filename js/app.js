@@ -1,6 +1,6 @@
 /**
  * Main Application Controller for Enterprise AI Server Resource Analysis
- * Coordinates state, JSON metadata loading, event orchestration, and live calculations.
+ * Coordinates state, JSON metadata loading, event orchestration, slide-over drawer panel, and live calculations.
  */
 
 class AIApp {
@@ -76,12 +76,29 @@ class AIApp {
       this.metadata.tiers = await tierRes.json();
     } catch (err) {
       console.warn('Network fetch error for local JSON (may be file:// protocol), using embedded fallback defaults', err);
-      // Fallback is handled gracefully if needed
     }
   }
 
   bindEvents() {
-    // 1. Inputs that trigger immediate recalculation
+    // 1. Drawer Open & Close Controls (via querySelectorAll for all open buttons)
+    const openDrawerBtns = document.querySelectorAll('.btn-open-drawer-action');
+    openDrawerBtns.forEach(btn => {
+      btn.addEventListener('click', () => this.openDrawer());
+    });
+
+    const btnCloseDrawer = document.getElementById('btn-close-drawer');
+    const btnApplyDrawer = document.getElementById('btn-apply-drawer');
+    const drawerBackdrop = document.getElementById('drawer-backdrop');
+
+    if (btnCloseDrawer) btnCloseDrawer.addEventListener('click', () => this.closeDrawer());
+    if (btnApplyDrawer) btnApplyDrawer.addEventListener('click', () => this.closeDrawer());
+    if (drawerBackdrop) drawerBackdrop.addEventListener('click', () => this.closeDrawer());
+
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') this.closeDrawer();
+    });
+
+    // 2. Inputs that trigger immediate recalculation
     const inputIds = [
       'input-active-users',
       'range-active-users',
@@ -107,7 +124,7 @@ class AIApp {
       }
     });
 
-    // 2. Sync range and number input for Active Users
+    // 3. Sync range and number input for Active Users
     const rangeUsers = document.getElementById('range-active-users');
     const numUsers = document.getElementById('input-active-users');
     if (rangeUsers && numUsers) {
@@ -121,18 +138,22 @@ class AIApp {
       });
     }
 
-    // 3. Preset Buttons
+    // 4. Preset Buttons
     const presetButtons = document.querySelectorAll('.preset-btn');
     presetButtons.forEach(btn => {
       btn.addEventListener('click', (e) => {
-        presetButtons.forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
+        presetButtons.forEach(b => b.classList.remove('active', 'bg-sky-500/20', 'text-sky-300', 'border-sky-400', 'shadow-glow-cyan', 'font-bold'));
+        presetButtons.forEach(b => b.classList.add('bg-slate-800', 'text-slate-300', 'font-medium'));
+        
+        btn.classList.remove('bg-slate-800', 'text-slate-300', 'font-medium');
+        btn.classList.add('active', 'bg-sky-500/20', 'text-sky-300', 'border-sky-400', 'shadow-glow-cyan', 'font-bold');
+
         const presetId = btn.getAttribute('data-preset');
         this.applyPreset(presetId);
       });
     });
 
-    // 4. Currency Switcher
+    // 5. Currency Switcher
     const currencySelect = document.getElementById('select-currency');
     if (currencySelect) {
       currencySelect.addEventListener('change', (e) => {
@@ -144,7 +165,7 @@ class AIApp {
       });
     }
 
-    // 5. Dynamic Select Cascades
+    // 6. Dynamic Select Cascades
     const cloudProviderSelect = document.getElementById('select-cloud-provider');
     if (cloudProviderSelect) {
       cloudProviderSelect.addEventListener('change', (e) => {
@@ -161,7 +182,7 @@ class AIApp {
       });
     }
 
-    // 6. Export / Print Executive Report
+    // 7. Export / Print Executive Report
     const exportBtn = document.getElementById('btn-export-report');
     if (exportBtn) {
       exportBtn.addEventListener('click', () => {
@@ -169,13 +190,44 @@ class AIApp {
       });
     }
 
-    // 7. Export JSON Config
+    // 8. Export JSON Config
     const exportJsonBtn = document.getElementById('btn-export-json');
     if (exportJsonBtn) {
       exportJsonBtn.addEventListener('click', () => {
         this.exportBudgetPlanJson();
       });
     }
+  }
+
+  openDrawer() {
+    const backdrop = document.getElementById('drawer-backdrop');
+    const drawer = document.getElementById('config-drawer');
+    if (!backdrop || !drawer) return;
+
+    backdrop.classList.remove('hidden');
+    // Force reflow
+    void backdrop.offsetWidth;
+    backdrop.classList.remove('opacity-0');
+    backdrop.classList.add('opacity-100');
+
+    drawer.classList.remove('translate-x-full');
+    drawer.classList.add('translate-x-0');
+  }
+
+  closeDrawer() {
+    const backdrop = document.getElementById('drawer-backdrop');
+    const drawer = document.getElementById('config-drawer');
+    if (!backdrop || !drawer) return;
+
+    drawer.classList.remove('translate-x-0');
+    drawer.classList.add('translate-x-full');
+
+    backdrop.classList.remove('opacity-100');
+    backdrop.classList.add('opacity-0');
+
+    setTimeout(() => {
+      backdrop.classList.add('hidden');
+    }, 300);
   }
 
   handleInputChange(e) {
@@ -257,8 +309,8 @@ class AIApp {
     const breakEvenEl = document.getElementById('break-even-insight');
     if (breakEvenEl && timelineData.breakEvenMonthApi) {
       breakEvenEl.innerHTML = `
-        <span class="pulse-dot"></span>
-        <strong>Architect Insight:</strong> For this workload (${workload.activeUsers} users), an On-Premise server breaks even vs commercial LLM API at <strong>Month ${timelineData.breakEvenMonthApi}</strong>, generating cumulative net savings of <strong>${this.uiRenderer.formatMoney(cloudLlmOption.threeYearTCO - onPremOption.threeYearTCO)}</strong> over 3 years.
+        <span class="w-2.5 h-2.5 rounded-full bg-sky-400 animate-pulse flex-shrink-0"></span>
+        <span><strong>Architect Insight:</strong> For this workload (${workload.activeUsers} users), an On-Premise server breaks even vs commercial LLM API at <strong>Month ${timelineData.breakEvenMonthApi}</strong>, generating cumulative net savings of <strong>${this.uiRenderer.formatMoney(cloudLlmOption.threeYearTCO - onPremOption.threeYearTCO)}</strong> over 3 years.</span>
       `;
     }
   }
@@ -296,6 +348,38 @@ class AIApp {
     downloadAnchor.remove();
   }
 }
+
+// Global open/close helper functions
+window.openDrawer = function() {
+  if (window.app && window.app.openDrawer) {
+    window.app.openDrawer();
+  } else {
+    const backdrop = document.getElementById('drawer-backdrop');
+    const drawer = document.getElementById('config-drawer');
+    if (backdrop && drawer) {
+      backdrop.classList.remove('hidden', 'opacity-0');
+      backdrop.classList.add('opacity-100');
+      drawer.classList.remove('translate-x-full');
+      drawer.classList.add('translate-x-0');
+    }
+  }
+};
+
+window.closeDrawer = function() {
+  if (window.app && window.app.closeDrawer) {
+    window.app.closeDrawer();
+  } else {
+    const backdrop = document.getElementById('drawer-backdrop');
+    const drawer = document.getElementById('config-drawer');
+    if (backdrop && drawer) {
+      drawer.classList.remove('translate-x-0');
+      drawer.classList.add('translate-x-full');
+      backdrop.classList.remove('opacity-100');
+      backdrop.classList.add('opacity-0');
+      setTimeout(() => backdrop.classList.add('hidden'), 300);
+    }
+  }
+};
 
 // Instantiate on DOM load
 window.addEventListener('DOMContentLoaded', () => {
