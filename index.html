@@ -82,6 +82,36 @@
         }
       }
     }
+
+    function switchTab(tabId) {
+      const viewParadigm = document.getElementById('view-paradigm');
+      const viewRecommendations = document.getElementById('view-recommendations');
+      const tabBtnParadigm = document.getElementById('tab-btn-paradigm');
+      const tabBtnRecs = document.getElementById('tab-btn-recommendations');
+
+      if (!viewParadigm || !viewRecommendations || !tabBtnParadigm || !tabBtnRecs) return;
+
+      if (tabId === 'paradigm') {
+        viewParadigm.classList.remove('hidden');
+        viewRecommendations.classList.add('hidden');
+
+        // Paradigm tab active style
+        tabBtnParadigm.className = 'tab-btn flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold bg-gradient-to-r from-sky-500 via-indigo-500 to-purple-600 text-white shadow-glow-cyan transition-all cursor-pointer border border-sky-400/30';
+        tabBtnRecs.className = 'tab-btn flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold bg-slate-900/60 hover:bg-slate-800/80 text-slate-400 hover:text-slate-200 border border-slate-800 transition-all cursor-pointer';
+
+        // Trigger chart resize after layout becomes visible
+        setTimeout(() => {
+          window.dispatchEvent(new Event('resize'));
+        }, 50);
+      } else if (tabId === 'recommendations') {
+        viewRecommendations.classList.remove('hidden');
+        viewParadigm.classList.add('hidden');
+
+        // Recommendations tab active style
+        tabBtnRecs.className = 'tab-btn flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 text-slate-950 shadow-glow-gold transition-all cursor-pointer border border-amber-300/40';
+        tabBtnParadigm.className = 'tab-btn flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold bg-slate-900/60 hover:bg-slate-800/80 text-slate-400 hover:text-slate-200 border border-slate-800 transition-all cursor-pointer';
+      }
+    }
   </script>
 
   <!-- Chart.js for Interactive TCO Visualizations -->
@@ -168,85 +198,134 @@
     </header>
 
 
-    <!-- 3. Top 3 Recommended Architectures Spotlight -->
-    <section class="mb-12">
-      <div class="mb-6">
-        <span class="inline-block text-xs font-bold uppercase tracking-widest text-sky-400 mb-1">
-          Solution Architect Recommendations
-        </span>
-        <h2 class="font-display text-2xl sm:text-3xl font-bold text-white mb-2">
-          Top 3 Recommended AI Architectures
-        </h2>
-        <p class="text-sm text-slate-400">
-          Ranked by enterprise suitability, multi-year TCO, data sovereignty, and operational complexity.
-        </p>
+    <!-- 2. Main Page View Switcher / Navigation Tabs -->
+    <div class="flex items-center justify-between gap-4 mb-8 bg-slate-900/80 backdrop-blur-xl border border-slate-800 p-2 rounded-2xl shadow-xl flex-wrap sm:flex-nowrap">
+      <div class="flex items-center gap-2 w-full sm:w-auto">
+        <!-- Tab 1: Paradigm Evaluation & Financial Forecasting (Main Page Default) -->
+        <button type="button" id="tab-btn-paradigm" onclick="switchTab('paradigm')" class="tab-btn flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold bg-gradient-to-r from-sky-500 via-indigo-500 to-purple-600 text-white shadow-glow-cyan transition-all cursor-pointer border border-sky-400/30">
+          <span>📊</span> Paradigm Evaluation & TCO Forecast
+        </button>
+        
+        <!-- Tab 2: Solution Architect Recommendations & BOM -->
+        <button type="button" id="tab-btn-recommendations" onclick="switchTab('recommendations')" class="tab-btn flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold bg-slate-900/60 hover:bg-slate-800/80 text-slate-400 hover:text-slate-200 border border-slate-800 transition-all cursor-pointer">
+          <span>🏆</span> Solution Architect Recommendations & BOM
+        </button>
       </div>
 
-      <!-- Container rendered dynamically by js/recommender.js -->
-      <div id="recommendations-container"></div>
-    </section>
-
-    <!-- 4. 3-Way Side-by-Side Comparison Matrix -->
-    <section class="mb-12">
-      <div class="mb-6">
-        <span class="inline-block text-xs font-bold uppercase tracking-widest text-sky-400 mb-1">
-          Paradigm Evaluation
-        </span>
-        <h2 class="font-display text-2xl sm:text-3xl font-bold text-white mb-2">
-          3-Way Cost & Resource Comparison Matrix
-        </h2>
-        <p class="text-sm text-slate-400">
-          Detailed breakdown across On-Premise GPU Server, Self-Hosted Cloud Instance, and Commercial LLM API.
-        </p>
+      <!-- Quick Action / Status indicator -->
+      <div class="hidden md:flex items-center gap-3 px-3 py-1.5 rounded-xl bg-slate-950/70 border border-slate-800 text-xs text-slate-400">
+        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+        <span>Interactive Architect Budgeting View</span>
       </div>
+    </div>
 
-      <div id="comparison-matrix-container"></div>
-    </section>
 
-    <!-- 5. Interactive Charts & TCO Timeline -->
-    <section class="mb-12">
-      <div class="mb-6">
-        <span class="inline-block text-xs font-bold uppercase tracking-widest text-sky-400 mb-1">
-          Financial Forecasting
-        </span>
-        <h2 class="font-display text-2xl sm:text-3xl font-bold text-white mb-2">
-          3-Year TCO Trajectory & Cost Composition
-        </h2>
-        <p class="text-sm text-slate-400">
-          Visualizing CapEx amortizations, cumulative expenditure crossovers, and monthly operational cost distribution.
-        </p>
-      </div>
+    <!-- ========================================================================= -->
+    <!-- VIEW 1: PARADIGM EVALUATION & FINANCIAL FORECASTING (MAIN PAGE DEFAULT)    -->
+    <!-- ========================================================================= -->
+    <div id="view-paradigm" class="space-y-12">
 
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-4">
-        <!-- 36-Month TCO Line Chart -->
-        <div class="lg:col-span-7 bg-slate-900/70 backdrop-blur-xl border border-slate-800 rounded-2xl p-6 shadow-xl flex flex-col justify-between">
-          <div class="mb-4">
-            <h3 class="font-display text-base font-bold text-white">Cumulative 36-Month TCO Timeline ($)</h3>
-            <p class="text-xs text-slate-400">Reveals the exact breakeven crossover where On-Premise hardware out-saves recurring cloud bills.</p>
+      <!-- Section: 3-Way Side-by-Side Paradigm Evaluation Matrix -->
+      <section>
+        <div class="mb-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div>
+            <span class="inline-block text-xs font-bold uppercase tracking-widest text-sky-400 mb-1">
+              Paradigm Evaluation
+            </span>
+            <h2 class="font-display text-2xl sm:text-3xl font-bold text-white mb-2">
+              3-Way Cost & Resource Comparison Matrix
+            </h2>
+            <p class="text-sm text-slate-400">
+              Detailed technical and financial breakdown across On-Premise GPU Server, Self-Hosted Cloud Instance, and Commercial LLM API.
+            </p>
           </div>
-          <div class="h-[280px] w-full relative">
-            <canvas id="tco-timeline-chart"></canvas>
+          
+          <button type="button" onclick="switchTab('recommendations')" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-400/40 transition whitespace-nowrap self-start md:self-auto cursor-pointer">
+            <span>🏆</span> View Top 3 Recommended Architectures →
+          </button>
+        </div>
+
+        <div id="comparison-matrix-container"></div>
+      </section>
+
+      <!-- Section: Financial Forecasting & TCO Timeline -->
+      <section class="pb-4">
+        <div class="mb-6">
+          <span class="inline-block text-xs font-bold uppercase tracking-widest text-sky-400 mb-1">
+            Financial Forecasting
+          </span>
+          <h2 class="font-display text-2xl sm:text-3xl font-bold text-white mb-2">
+            3-Year TCO Trajectory & Cost Composition
+          </h2>
+          <p class="text-sm text-slate-400">
+            Visualizing CapEx amortizations, cumulative expenditure crossovers, and monthly operational cost distribution.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-4">
+          <!-- 36-Month TCO Line Chart -->
+          <div class="lg:col-span-7 bg-slate-900/70 backdrop-blur-xl border border-slate-800 rounded-2xl p-6 shadow-xl flex flex-col justify-between">
+            <div class="mb-4">
+              <h3 class="font-display text-base font-bold text-white">Cumulative 36-Month TCO Timeline ($)</h3>
+              <p class="text-xs text-slate-400">Reveals the exact breakeven crossover where On-Premise hardware out-saves recurring cloud bills.</p>
+            </div>
+            <div class="h-[280px] w-full relative">
+              <canvas id="tco-timeline-chart"></canvas>
+            </div>
+          </div>
+
+          <!-- Monthly Cost Breakdown Bar Chart -->
+          <div class="lg:col-span-5 bg-slate-900/70 backdrop-blur-xl border border-slate-800 rounded-2xl p-6 shadow-xl flex flex-col justify-between">
+            <div class="mb-4">
+              <h3 class="font-display text-base font-bold text-white">Monthly Cost Composition Breakdown</h3>
+              <p class="text-xs text-slate-400">Hardware amortization vs power & cooling vs cloud compute vs IT maintenance.</p>
+            </div>
+            <div class="h-[280px] w-full relative">
+              <canvas id="cost-breakdown-chart"></canvas>
+            </div>
           </div>
         </div>
 
-        <!-- Monthly Cost Breakdown Bar Chart -->
-        <div class="lg:col-span-5 bg-slate-900/70 backdrop-blur-xl border border-slate-800 rounded-2xl p-6 shadow-xl flex flex-col justify-between">
-          <div class="mb-4">
-            <h3 class="font-display text-base font-bold text-white">Monthly Cost Composition Breakdown</h3>
-            <p class="text-xs text-slate-400">Hardware amortization vs power & cooling vs cloud compute vs IT maintenance.</p>
-          </div>
-          <div class="h-[280px] w-full relative">
-            <canvas id="cost-breakdown-chart"></canvas>
-          </div>
+        <!-- Breakeven Callout Insight -->
+        <div id="break-even-insight" class="bg-sky-950/30 border border-sky-500/30 rounded-2xl p-4 flex items-center gap-3 text-xs sm:text-sm text-slate-200">
+          <span class="w-2.5 h-2.5 rounded-full bg-sky-400 animate-pulse flex-shrink-0"></span>
+          <span>Calculating breakeven crossover analysis...</span>
         </div>
-      </div>
+      </section>
 
-      <!-- Breakeven Callout Insight -->
-      <div id="break-even-insight" class="bg-sky-950/30 border border-sky-500/30 rounded-2xl p-4 flex items-center gap-3 text-xs sm:text-sm text-slate-200">
-        <span class="w-2.5 h-2.5 rounded-full bg-sky-400 animate-pulse flex-shrink-0"></span>
-        <span>Calculating breakeven crossover analysis...</span>
-      </div>
-    </section>
+    </div>
+
+
+    <!-- ========================================================================= -->
+    <!-- VIEW 2: SOLUTION ARCHITECT RECOMMENDATIONS (SEPARATE TAB / PAGE)          -->
+    <!-- ========================================================================= -->
+    <div id="view-recommendations" class="hidden space-y-8">
+      
+      <!-- Top 3 Recommended Architectures Spotlight -->
+      <section class="mb-12">
+        <div class="mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div>
+            <span class="inline-block text-xs font-bold uppercase tracking-widest text-amber-400 mb-1">
+              Solution Architect Recommendations
+            </span>
+            <h2 class="font-display text-2xl sm:text-3xl font-bold text-white mb-2">
+              Top 3 Recommended AI Architectures & Itemized BOM
+            </h2>
+            <p class="text-sm text-slate-400">
+              Ranked by enterprise suitability, multi-year TCO, data sovereignty, and operational complexity.
+            </p>
+          </div>
+
+          <button type="button" onclick="switchTab('paradigm')" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold bg-slate-800/90 hover:bg-slate-800 text-slate-200 border border-slate-700 transition cursor-pointer self-start sm:self-auto">
+            ← Back to Paradigm & TCO Forecast
+          </button>
+        </div>
+
+        <!-- Container rendered dynamically by js/recommender.js -->
+        <div id="recommendations-container"></div>
+      </section>
+    </div>
+
 
     <!-- Footer -->
     <footer class="text-center pt-6 border-t border-slate-800/80 text-xs text-slate-500">
