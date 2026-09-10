@@ -1,15 +1,19 @@
 <!DOCTYPE html>
 <html lang="en" class="dark">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Enterprise AI Server Resource & Cost Architect | On-Premise vs Cloud vs API</title>
-  <meta name="description" content="Professional AI solution architect budgeting calculator answering: What’s the cost for an AI server to host a LLM to handle enterprise needs? Compare On-Premise RTX 50/40/30, Cloud GPU deployments, and Cloud LLM APIs.">
-  
+  <meta name="description"
+    content="Professional AI solution architect budgeting calculator answering: What’s the cost for an AI server to host a LLM to handle enterprise needs? Compare On-Premise RTX 50/40/30, Cloud GPU deployments, and Cloud LLM APIs.">
+
   <!-- Google Fonts: Inter & Outfit -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&family=Outfit:wght@500;600;700;800&display=swap"
+    rel="stylesheet">
 
   <!-- Tailwind CSS v3 Play CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -130,37 +134,49 @@
       box-shadow: 0 0 12px rgba(56, 189, 248, 0.6);
       transition: transform 0.15s ease;
     }
+
     input[type=range]::-webkit-slider-thumb:hover {
       transform: scale(1.2);
     }
+
     .custom-scrollbar::-webkit-scrollbar {
       width: 6px;
       height: 6px;
     }
+
     .custom-scrollbar::-webkit-scrollbar-thumb {
       background: rgba(255, 255, 255, 0.15);
       border-radius: 9999px;
     }
   </style>
 </head>
-<body class="bg-[#070b14] text-slate-100 font-sans min-h-screen antialiased relative overflow-x-hidden selection:bg-sky-500 selection:text-white">
+
+<body
+  class="bg-[#070b14] text-slate-100 font-sans min-h-screen antialiased relative overflow-x-hidden selection:bg-sky-500 selection:text-white">
 
   <!-- Background Ambient Glow Accents -->
-  <div class="fixed top-[-150px] left-[15%] w-[650px] h-[650px] bg-gradient-to-br from-sky-500/10 to-indigo-500/5 rounded-full blur-[120px] pointer-events-none -z-10"></div>
-  <div class="fixed bottom-[-150px] right-[10%] w-[600px] h-[600px] bg-gradient-to-tl from-emerald-500/10 to-purple-500/5 rounded-full blur-[130px] pointer-events-none -z-10"></div>
+  <div
+    class="fixed top-[-150px] left-[15%] w-[650px] h-[650px] bg-gradient-to-br from-sky-500/10 to-indigo-500/5 rounded-full blur-[120px] pointer-events-none -z-10">
+  </div>
+  <div
+    class="fixed bottom-[-150px] right-[10%] w-[600px] h-[600px] bg-gradient-to-tl from-emerald-500/10 to-purple-500/5 rounded-full blur-[130px] pointer-events-none -z-10">
+  </div>
 
   <!-- STICKY FLOATING ACTION BUTTON (FAB) FOR DRAWER -->
-  <button type="button" onclick="openDrawer()" class="btn-open-drawer-action fixed bottom-6 right-6 z-30 inline-flex items-center gap-2.5 px-5 py-3 rounded-full font-bold text-xs sm:text-sm bg-gradient-to-r from-sky-500 via-indigo-500 to-purple-500 hover:from-sky-400 hover:to-purple-400 text-white shadow-[0_10px_25px_rgba(56,189,248,0.4)] border border-sky-300/40 transition hover:scale-105 active:scale-95 cursor-pointer">
+  <button type="button" onclick="openDrawer()"
+    class="btn-open-drawer-action fixed bottom-6 right-6 z-30 inline-flex items-center gap-2.5 px-5 py-3 rounded-full font-bold text-xs sm:text-sm bg-gradient-to-r from-sky-500 via-indigo-500 to-purple-500 hover:from-sky-400 hover:to-purple-400 text-white shadow-[0_10px_25px_rgba(56,189,248,0.4)] border border-sky-300/40 transition hover:scale-105 active:scale-95 cursor-pointer">
     <span class="animate-spin" style="animation-duration: 6s;">⚙️</span>
     <span>Configure Sizing & Specs</span>
   </button>
 
   <div class="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-6 pb-20">
-    
+
     <!-- 1. Executive Header -->
-    <header class="bg-slate-900/70 backdrop-blur-xl border border-slate-800 rounded-2xl p-5 mb-8 shadow-xl flex flex-col md:flex-row items-center justify-between gap-4">
+    <header
+      class="bg-slate-900/70 backdrop-blur-xl border border-slate-800 rounded-2xl p-5 mb-8 shadow-xl flex flex-col md:flex-row items-center justify-between gap-4">
       <div class="flex items-center gap-4 w-full md:w-auto">
-        <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-sky-500 to-indigo-600 flex items-center justify-center text-2xl shadow-glow-cyan">
+        <div
+          class="w-12 h-12 rounded-xl bg-gradient-to-br from-sky-500 to-indigo-600 flex items-center justify-center text-2xl shadow-glow-cyan">
           ⚡
         </div>
         <div>
@@ -175,96 +191,89 @@
 
       <div class="flex items-center gap-3 w-full md:w-auto justify-end flex-wrap sm:flex-nowrap">
         <!-- Open Drawer Button -->
-        <button type="button" id="btn-open-drawer" onclick="openDrawer()" class="btn-open-drawer-action inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-gradient-to-r from-sky-500 via-indigo-500 to-purple-500 hover:from-sky-400 hover:to-purple-400 text-white shadow-glow-cyan transition cursor-pointer">
+        <button type="button" id="btn-open-drawer" onclick="openDrawer()"
+          class="btn-open-drawer-action inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-gradient-to-r from-sky-500 via-indigo-500 to-purple-500 hover:from-sky-400 hover:to-purple-400 text-white shadow-glow-cyan transition cursor-pointer">
           <span>⚙️</span> Configure Sizing & Specs
         </button>
 
         <div class="relative">
-          <select id="select-currency" class="bg-slate-950/80 text-white border border-slate-700/70 rounded-xl px-3 py-2 text-xs sm:text-sm font-semibold outline-none hover:border-sky-400 focus:border-sky-400 transition cursor-pointer" aria-label="Select Currency">
+          <select id="select-currency"
+            class="bg-slate-950/80 text-white border border-slate-700/70 rounded-xl px-3 py-2 text-xs sm:text-sm font-semibold outline-none hover:border-sky-400 focus:border-sky-400 transition cursor-pointer"
+            aria-label="Select Currency">
             <option value="USD">USD ($)</option>
             <option value="EUR">EUR (€)</option>
             <option value="TWD">TWD (NT$)</option>
             <option value="JPY">JPY (¥)</option>
           </select>
         </div>
-        
-        <button type="button" id="btn-export-json" class="inline-flex items-center gap-2 px-3 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-slate-800/80 hover:bg-slate-800 text-slate-200 border border-slate-700 transition cursor-pointer">
+
+        <button type="button" id="btn-export-json"
+          class="inline-flex items-center gap-2 px-3 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-slate-800/80 hover:bg-slate-800 text-slate-200 border border-slate-700 transition cursor-pointer">
           <span>💾</span> <span class="hidden sm:inline">Export</span> JSON
         </button>
-        <button type="button" id="btn-export-report" class="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-slate-800/80 hover:bg-slate-800 text-slate-200 border border-slate-700 transition cursor-pointer">
+        <button type="button" id="btn-export-report"
+          class="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-slate-800/80 hover:bg-slate-800 text-slate-200 border border-slate-700 transition cursor-pointer">
           <span>📄</span> Print PDF
         </button>
       </div>
     </header>
 
-    <!-- 1.5 Main Page Active Workload KPI Summary Bar -->
-    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+    <!-- 1.5 Main Page Active Workload KPI Summary Bar (Synchronized with Drawer Config) -->
+    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 mb-6">
       <!-- Active AI Users -->
-      <div class="bg-slate-900/70 backdrop-blur-xl border border-slate-800 rounded-2xl p-4 sm:p-5 shadow-xl flex items-center justify-between relative overflow-hidden group">
+      <div
+        class="bg-slate-900/70 backdrop-blur-xl border border-slate-800 rounded-2xl p-3.5 sm:p-4 shadow-xl relative overflow-hidden group">
         <div class="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-sky-400 to-blue-500"></div>
-        <div>
-          <div class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-1 flex items-center gap-1.5">
-            <span>👥</span> Active AI Users
-          </div>
-          <div class="font-mono text-2xl sm:text-3xl font-black text-white" id="main-kpi-active-users">
-            50
-          </div>
-          <div class="text-[11px] text-slate-400 mt-1">Enterprise active seats</div>
+        <div class="text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-1 flex items-center gap-1.5">
+          <span>👥</span> Active Users
         </div>
-        <div class="w-12 h-12 rounded-xl bg-sky-500/10 border border-sky-500/30 flex items-center justify-center text-sky-400 text-xl font-bold shadow-inner">
-          👤
-        </div>
+        <div class="font-mono text-xl sm:text-2xl font-black text-white" id="main-kpi-active-users">50</div>
+        <div class="text-[10px] text-slate-500 mt-1">Enterprise seats</div>
       </div>
 
       <!-- Daily Queries -->
-      <div class="bg-slate-900/70 backdrop-blur-xl border border-slate-800 rounded-2xl p-4 sm:p-5 shadow-xl flex items-center justify-between relative overflow-hidden group">
-        <div class="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-indigo-400 to-purple-500"></div>
-        <div>
-          <div class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-1 flex items-center gap-1.5">
-            <span>📈</span> Daily Queries
-          </div>
-          <div class="font-mono text-2xl sm:text-3xl font-black text-sky-400" id="main-kpi-daily-queries">
-            1,250
-          </div>
-          <div class="text-[11px] text-slate-400 mt-1">Prompt requests / day</div>
+      <div
+        class="bg-slate-900/70 backdrop-blur-xl border border-slate-800 rounded-2xl p-3.5 sm:p-4 shadow-xl relative overflow-hidden group">
+        <div class="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-sky-400 via-indigo-500 to-purple-500">
         </div>
-        <div class="w-12 h-12 rounded-xl bg-indigo-500/10 border border-indigo-500/30 flex items-center justify-center text-indigo-400 text-xl font-bold shadow-inner">
-          📊
+        <div class="text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-1 flex items-center gap-1.5">
+          <span>📈</span> Daily Queries
         </div>
+        <div class="font-mono text-xl sm:text-2xl font-black text-sky-400" id="main-kpi-daily-queries">1,250</div>
+        <div class="text-[10px] text-slate-500 mt-1">Prompt requests</div>
       </div>
 
       <!-- Daily Tokens -->
-      <div class="bg-slate-900/70 backdrop-blur-xl border border-slate-800 rounded-2xl p-4 sm:p-5 shadow-xl flex items-center justify-between relative overflow-hidden group">
-        <div class="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-purple-400 to-pink-500"></div>
-        <div>
-          <div class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-1 flex items-center gap-1.5">
-            <span>⚡</span> Daily Tokens
-          </div>
-          <div class="font-mono text-2xl sm:text-3xl font-black text-purple-400" id="main-kpi-daily-tokens">
-            1.63M
-          </div>
-          <div class="text-[11px] text-slate-400 mt-1">Prompt + completion tokens</div>
+      <div
+        class="bg-slate-900/70 backdrop-blur-xl border border-slate-800 rounded-2xl p-3.5 sm:p-4 shadow-xl relative overflow-hidden group">
+        <div class="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-indigo-400 to-purple-500"></div>
+        <div class="text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-1 flex items-center gap-1.5">
+          <span>⚡</span> Daily Tokens
         </div>
-        <button type="button" onclick="openDrawer()" class="btn-open-drawer-action px-3.5 py-2 rounded-xl text-xs font-bold bg-sky-500/20 hover:bg-sky-500/30 text-sky-300 border border-sky-400/40 transition whitespace-nowrap cursor-pointer">
-          Adjust ⚙️
-        </button>
+        <div class="font-mono text-xl sm:text-2xl font-black text-purple-400" id="main-kpi-daily-tokens">1.63M</div>
+        <div class="text-[10px] text-slate-500 mt-1">Prompt + output</div>
       </div>
     </div>
-    <div class="flex items-center justify-between gap-4 mb-8 bg-slate-900/80 backdrop-blur-xl border border-slate-800 p-2 rounded-2xl shadow-xl flex-wrap sm:flex-nowrap">
+
+    <div
+      class="flex items-center justify-between gap-4 mb-8 bg-slate-900/80 backdrop-blur-xl border border-slate-800 p-2 rounded-2xl shadow-xl flex-wrap sm:flex-nowrap">
       <div class="flex items-center gap-2 w-full sm:w-auto">
         <!-- Tab 1: Paradigm Evaluation & Financial Forecasting (Main Page Default) -->
-        <button type="button" id="tab-btn-paradigm" onclick="switchTab('paradigm')" class="tab-btn flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold bg-gradient-to-r from-sky-500 via-indigo-500 to-purple-600 text-white shadow-glow-cyan transition-all cursor-pointer border border-sky-400/30">
+        <button type="button" id="tab-btn-paradigm" onclick="switchTab('paradigm')"
+          class="tab-btn flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold bg-gradient-to-r from-sky-500 via-indigo-500 to-purple-600 text-white shadow-glow-cyan transition-all cursor-pointer border border-sky-400/30">
           <span>📊</span> Paradigm Evaluation & TCO Forecast
         </button>
-        
+
         <!-- Tab 2: Solution Architect Recommendations & BOM -->
-        <button type="button" id="tab-btn-recommendations" onclick="switchTab('recommendations')" class="tab-btn flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold bg-slate-900/60 hover:bg-slate-800/80 text-slate-400 hover:text-slate-200 border border-slate-800 transition-all cursor-pointer">
+        <button type="button" id="tab-btn-recommendations" onclick="switchTab('recommendations')"
+          class="tab-btn flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold bg-slate-900/60 hover:bg-slate-800/80 text-slate-400 hover:text-slate-200 border border-slate-800 transition-all cursor-pointer">
           <span>🏆</span> Solution Architect Recommendations & BOM
         </button>
       </div>
 
       <!-- Quick Action / Status indicator -->
-      <div class="hidden md:flex items-center gap-3 px-3 py-1.5 rounded-xl bg-slate-950/70 border border-slate-800 text-xs text-slate-400">
+      <div
+        class="hidden md:flex items-center gap-3 px-3 py-1.5 rounded-xl bg-slate-950/70 border border-slate-800 text-xs text-slate-400">
         <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
         <span>Interactive Architect Budgeting View</span>
       </div>
@@ -287,11 +296,13 @@
               3-Way Cost & Resource Comparison Matrix
             </h2>
             <p class="text-sm text-slate-400">
-              Detailed technical and financial breakdown across On-Premise GPU Server, Self-Hosted Cloud Instance, and Commercial LLM API.
+              Detailed technical and financial breakdown across On-Premise GPU Server, Self-Hosted Cloud Instance, and
+              Commercial LLM API.
             </p>
           </div>
-          
-          <button type="button" onclick="switchTab('recommendations')" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-400/40 transition whitespace-nowrap self-start md:self-auto cursor-pointer">
+
+          <button type="button" onclick="switchTab('recommendations')"
+            class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-400/40 transition whitespace-nowrap self-start md:self-auto cursor-pointer">
             <span>🏆</span> View Top 3 Recommended Architectures →
           </button>
         </div>
@@ -309,16 +320,19 @@
             3-Year TCO Trajectory & Cost Composition
           </h2>
           <p class="text-sm text-slate-400">
-            Visualizing CapEx amortizations, cumulative expenditure crossovers, and monthly operational cost distribution.
+            Visualizing CapEx amortizations, cumulative expenditure crossovers, and monthly operational cost
+            distribution.
           </p>
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-4">
           <!-- 36-Month TCO Line Chart -->
-          <div class="lg:col-span-7 bg-slate-900/70 backdrop-blur-xl border border-slate-800 rounded-2xl p-6 shadow-xl flex flex-col justify-between">
+          <div
+            class="lg:col-span-7 bg-slate-900/70 backdrop-blur-xl border border-slate-800 rounded-2xl p-6 shadow-xl flex flex-col justify-between">
             <div class="mb-4">
               <h3 class="font-display text-base font-bold text-white">Cumulative 36-Month TCO Timeline ($)</h3>
-              <p class="text-xs text-slate-400">Reveals the exact breakeven crossover where On-Premise hardware out-saves recurring cloud bills.</p>
+              <p class="text-xs text-slate-400">Reveals the exact breakeven crossover where On-Premise hardware
+                out-saves recurring cloud bills.</p>
             </div>
             <div class="h-[280px] w-full relative">
               <canvas id="tco-timeline-chart"></canvas>
@@ -326,10 +340,12 @@
           </div>
 
           <!-- Monthly Cost Breakdown Bar Chart -->
-          <div class="lg:col-span-5 bg-slate-900/70 backdrop-blur-xl border border-slate-800 rounded-2xl p-6 shadow-xl flex flex-col justify-between">
+          <div
+            class="lg:col-span-5 bg-slate-900/70 backdrop-blur-xl border border-slate-800 rounded-2xl p-6 shadow-xl flex flex-col justify-between">
             <div class="mb-4">
               <h3 class="font-display text-base font-bold text-white">Monthly Cost Composition Breakdown</h3>
-              <p class="text-xs text-slate-400">Hardware amortization vs power & cooling vs cloud compute vs IT maintenance.</p>
+              <p class="text-xs text-slate-400">Hardware amortization vs power & cooling vs cloud compute vs IT
+                maintenance.</p>
             </div>
             <div class="h-[280px] w-full relative">
               <canvas id="cost-breakdown-chart"></canvas>
@@ -338,7 +354,8 @@
         </div>
 
         <!-- Breakeven Callout Insight -->
-        <div id="break-even-insight" class="bg-sky-950/30 border border-sky-500/30 rounded-2xl p-4 flex items-center gap-3 text-xs sm:text-sm text-slate-200">
+        <div id="break-even-insight"
+          class="bg-sky-950/30 border border-sky-500/30 rounded-2xl p-4 flex items-center gap-3 text-xs sm:text-sm text-slate-200">
           <span class="w-2.5 h-2.5 rounded-full bg-sky-400 animate-pulse flex-shrink-0"></span>
           <span>Calculating breakeven crossover analysis...</span>
         </div>
@@ -351,7 +368,7 @@
     <!-- VIEW 2: SOLUTION ARCHITECT RECOMMENDATIONS (SEPARATE TAB / PAGE)          -->
     <!-- ========================================================================= -->
     <div id="view-recommendations" class="hidden space-y-8">
-      
+
       <!-- Top 3 Recommended Architectures Spotlight -->
       <section class="mb-12">
         <div class="mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -367,7 +384,8 @@
             </p>
           </div>
 
-          <button type="button" onclick="switchTab('paradigm')" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold bg-slate-800/90 hover:bg-slate-800 text-slate-200 border border-slate-700 transition cursor-pointer self-start sm:self-auto">
+          <button type="button" onclick="switchTab('paradigm')"
+            class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold bg-slate-800/90 hover:bg-slate-800 text-slate-200 border border-slate-700 transition cursor-pointer self-start sm:self-auto">
             ← Back to Paradigm & TCO Forecast
           </button>
         </div>
@@ -380,8 +398,10 @@
 
     <!-- Footer -->
     <footer class="text-center pt-6 border-t border-slate-800/80 text-xs text-slate-500">
-      <p class="mb-1 text-slate-400">Enterprise AI Server Resource & Cost Budget Architect • Designed for CTOs, CIOs & AI Infrastructure Engineers</p>
-      <p>Data rates modeled on NVIDIA RTX 50/40/30 series specs, AWS/Azure/GCP/RunPod/Lambda rates, and commercial LLM API pricing.</p>
+      <p class="mb-1 text-slate-400">Enterprise AI Server Resource & Cost Budget Architect • Designed for CTOs, CIOs &
+        AI Infrastructure Engineers</p>
+      <p>Data rates modeled on NVIDIA RTX 50/40/30 series specs, AWS/Azure/GCP/RunPod/Lambda rates, and commercial LLM
+        API pricing.</p>
     </footer>
 
   </div>
@@ -396,11 +416,13 @@
   <!-- ========================================================================= -->
 
   <!-- Drawer Backdrop Overlay -->
-  <div id="drawer-backdrop" onclick="closeDrawer()" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-40 hidden opacity-0 transition-opacity duration-300"></div>
+  <div id="drawer-backdrop" onclick="closeDrawer()"
+    class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-40 hidden opacity-0 transition-opacity duration-300"></div>
 
   <!-- Drawer Slide-Panel -->
-  <aside id="config-drawer" class="fixed inset-y-0 right-0 z-50 w-full max-w-2xl bg-slate-900 border-l border-slate-800 shadow-2xl flex flex-col transform translate-x-full transition-transform duration-300 ease-in-out">
-    
+  <aside id="config-drawer"
+    class="fixed inset-y-0 right-0 z-50 w-full max-w-2xl bg-slate-900 border-l border-slate-800 shadow-2xl flex flex-col transform translate-x-full transition-transform duration-300 ease-in-out">
+
     <!-- Drawer Header -->
     <div class="px-6 py-5 border-b border-slate-800 bg-slate-950/60 flex items-center justify-between">
       <div>
@@ -409,7 +431,9 @@
         </h3>
         <p class="text-xs text-slate-400">Adjust active user scale, token demands, GPU hardware, and cloud options.</p>
       </div>
-      <button type="button" id="btn-close-drawer" onclick="closeDrawer()" class="p-2 text-slate-400 hover:text-white rounded-xl hover:bg-slate-800/80 transition text-lg cursor-pointer" title="Close Drawer">
+      <button type="button" id="btn-close-drawer" onclick="closeDrawer()"
+        class="p-2 text-slate-400 hover:text-white rounded-xl hover:bg-slate-800/80 transition text-lg cursor-pointer"
+        title="Close Drawer">
         ✕
       </button>
     </div>
@@ -432,12 +456,16 @@
           </div>
           <div class="grid grid-cols-2 sm:grid-cols-3 gap-2.5 text-xs">
             <div class="bg-slate-900/70 border border-slate-800/80 rounded-xl p-2.5">
+              <div class="text-[10px] text-slate-400 uppercase font-semibold">Active Users</div>
+              <div class="font-mono text-base font-bold text-white" id="drawer-kpi-active-users">50</div>
+            </div>
+            <div class="bg-slate-900/70 border border-slate-800/80 rounded-xl p-2.5">
               <div class="text-[10px] text-slate-400 uppercase font-semibold">Daily Queries</div>
-              <div class="font-mono text-base font-bold text-white" id="drawer-kpi-daily-queries">1,250</div>
+              <div class="font-mono text-base font-bold text-sky-400" id="drawer-kpi-daily-queries">1,250</div>
             </div>
             <div class="bg-slate-900/70 border border-slate-800/80 rounded-xl p-2.5">
               <div class="text-[10px] text-slate-400 uppercase font-semibold">Daily Tokens</div>
-              <div class="font-mono text-base font-bold text-sky-400" id="drawer-kpi-daily-tokens">1.63M</div>
+              <div class="font-mono text-base font-bold text-purple-400" id="drawer-kpi-daily-tokens">1.63M</div>
             </div>
             <div class="bg-slate-900/70 border border-slate-800/80 rounded-xl p-2.5">
               <div class="text-[10px] text-slate-400 uppercase font-semibold">Peak QPS</div>
@@ -445,10 +473,11 @@
             </div>
             <div class="bg-slate-900/70 border border-slate-800/80 rounded-xl p-2.5">
               <div class="text-[10px] text-slate-400 uppercase font-semibold">Stream Slots</div>
-              <div class="font-mono text-base font-bold text-slate-200" id="drawer-kpi-concurrent-streams">2 Slots</div>
+              <div class="font-mono text-base font-bold text-emerald-400" id="drawer-kpi-concurrent-streams">2 Slots
+              </div>
             </div>
-            <div class="bg-slate-900/70 border border-slate-800/80 rounded-xl p-2.5 col-span-2 sm:col-span-2">
-              <div class="text-[10px] text-slate-400 uppercase font-semibold">Monthly Token Load</div>
+            <div class="bg-slate-900/70 border border-slate-800/80 rounded-xl p-2.5">
+              <div class="text-[10px] text-slate-400 uppercase font-semibold">Monthly Load</div>
               <div class="font-mono text-base font-bold text-amber-400" id="drawer-kpi-monthly-tokens">35.8M</div>
             </div>
           </div>
@@ -458,19 +487,29 @@
         <div>
           <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Scale Presets:</label>
           <div class="flex flex-wrap gap-2">
-            <button type="button" class="preset-btn px-3 py-1.5 rounded-full text-xs font-medium bg-slate-800 hover:bg-sky-500/20 text-slate-300 hover:text-white border border-slate-700 transition cursor-pointer" data-preset="startup">
+            <button type="button"
+              class="preset-btn px-3 py-1.5 rounded-full text-xs font-medium bg-slate-800 hover:bg-sky-500/20 text-slate-300 hover:text-white border border-slate-700 transition cursor-pointer"
+              data-preset="startup">
               🚀 Startup (10)
             </button>
-            <button type="button" class="preset-btn active px-3 py-1.5 rounded-full text-xs font-bold bg-sky-500/20 text-sky-300 border border-sky-400 transition cursor-pointer" data-preset="smb">
+            <button type="button"
+              class="preset-btn active px-3 py-1.5 rounded-full text-xs font-bold bg-sky-500/20 text-sky-300 border border-sky-400 transition cursor-pointer"
+              data-preset="smb">
               🏢 SMB (50)
             </button>
-            <button type="button" class="preset-btn px-3 py-1.5 rounded-full text-xs font-medium bg-slate-800 hover:bg-sky-500/20 text-slate-300 hover:text-white border border-slate-700 transition cursor-pointer" data-preset="midmarket">
+            <button type="button"
+              class="preset-btn px-3 py-1.5 rounded-full text-xs font-medium bg-slate-800 hover:bg-sky-500/20 text-slate-300 hover:text-white border border-slate-700 transition cursor-pointer"
+              data-preset="midmarket">
               🏬 Mid-Market (250)
             </button>
-            <button type="button" class="preset-btn px-3 py-1.5 rounded-full text-xs font-medium bg-slate-800 hover:bg-sky-500/20 text-slate-300 hover:text-white border border-slate-700 transition cursor-pointer" data-preset="enterprise">
+            <button type="button"
+              class="preset-btn px-3 py-1.5 rounded-full text-xs font-medium bg-slate-800 hover:bg-sky-500/20 text-slate-300 hover:text-white border border-slate-700 transition cursor-pointer"
+              data-preset="enterprise">
               🌐 Enterprise (1k)
             </button>
-            <button type="button" class="preset-btn px-3 py-1.5 rounded-full text-xs font-medium bg-slate-800 hover:bg-sky-500/20 text-slate-300 hover:text-white border border-slate-700 transition cursor-pointer" data-preset="tech_giant">
+            <button type="button"
+              class="preset-btn px-3 py-1.5 rounded-full text-xs font-medium bg-slate-800 hover:bg-sky-500/20 text-slate-300 hover:text-white border border-slate-700 transition cursor-pointer"
+              data-preset="tech_giant">
               🏛️ Tech Giant (5k+)
             </button>
           </div>
@@ -480,34 +519,48 @@
         <div class="bg-slate-950/70 border border-slate-800 rounded-xl p-4 space-y-3">
           <div class="flex justify-between items-center">
             <label for="input-active-users" class="text-xs font-bold text-slate-200">Company Active AI Users</label>
-            <input type="number" id="input-active-users" class="font-mono text-sm font-bold bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1 text-right text-white w-24 outline-none focus:border-sky-400" value="50" min="1" max="50000" step="1">
+            <input type="number" id="input-active-users"
+              class="font-mono text-sm font-bold bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1 text-right text-white w-24 outline-none focus:border-sky-400"
+              value="50" min="1" max="50000" step="1">
           </div>
-          <input type="range" id="range-active-users" class="w-full h-2 bg-slate-800 rounded-lg appearance-none cursor-pointer outline-none" min="1" max="2500" value="50" step="1">
+          <input type="range" id="range-active-users"
+            class="w-full h-2 bg-slate-800 rounded-lg appearance-none cursor-pointer outline-none" min="1" max="2500"
+            value="50" step="1">
         </div>
 
         <!-- Workload Numeric Inputs -->
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          
+
           <div class="bg-slate-950/70 border border-slate-800 rounded-xl p-3.5">
-            <label for="input-queries-per-user" class="block text-xs font-semibold text-slate-300 mb-1.5">Queries / User / Day</label>
-            <input type="number" id="input-queries-per-user" class="font-mono text-xs font-bold w-full bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-white outline-none focus:border-sky-400" value="25" min="1" max="500" step="1">
+            <label for="input-queries-per-user" class="block text-xs font-semibold text-slate-300 mb-1.5">Queries / User
+              / Day</label>
+            <input type="number" id="input-queries-per-user"
+              class="font-mono text-xs font-bold w-full bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-white outline-none focus:border-sky-400"
+              value="25" min="1" max="500" step="1">
             <span class="text-[11px] text-slate-500 mt-1 block">Standard business: 15-45</span>
           </div>
 
           <div class="bg-slate-950/70 border border-slate-800 rounded-xl p-3.5 space-y-2">
             <div class="flex justify-between items-center">
               <label for="input-avg-prompt-tokens" class="text-xs font-semibold text-slate-300">Prompt Tokens</label>
-              <input type="number" id="input-avg-prompt-tokens" class="font-mono text-xs font-bold bg-slate-900 border border-slate-700 rounded-lg px-2 py-1 text-right text-white w-20 outline-none focus:border-sky-400" value="800" min="50" max="100000" step="50">
+              <input type="number" id="input-avg-prompt-tokens"
+                class="font-mono text-xs font-bold bg-slate-900 border border-slate-700 rounded-lg px-2 py-1 text-right text-white w-20 outline-none focus:border-sky-400"
+                value="800" min="50" max="100000" step="50">
             </div>
             <div class="flex justify-between items-center">
-              <label for="input-avg-completion-tokens" class="text-xs font-semibold text-slate-300">Output Tokens</label>
-              <input type="number" id="input-avg-completion-tokens" class="font-mono text-xs font-bold bg-slate-900 border border-slate-700 rounded-lg px-2 py-1 text-right text-white w-20 outline-none focus:border-sky-400" value="500" min="20" max="16000" step="20">
+              <label for="input-avg-completion-tokens" class="text-xs font-semibold text-slate-300">Output
+                Tokens</label>
+              <input type="number" id="input-avg-completion-tokens"
+                class="font-mono text-xs font-bold bg-slate-900 border border-slate-700 rounded-lg px-2 py-1 text-right text-white w-20 outline-none focus:border-sky-400"
+                value="500" min="20" max="16000" step="20">
             </div>
           </div>
 
           <div class="bg-slate-950/70 border border-slate-800 rounded-xl p-3.5">
-            <label for="select-privacy-level" class="block text-xs font-semibold text-slate-300 mb-1.5">Compliance & Privacy</label>
-            <select id="select-privacy-level" class="w-full bg-slate-900 border border-slate-700 text-slate-200 text-xs rounded-lg px-2.5 py-1.5 outline-none focus:border-sky-400 cursor-pointer">
+            <label for="select-privacy-level" class="block text-xs font-semibold text-slate-300 mb-1.5">Compliance &
+              Privacy</label>
+            <select id="select-privacy-level"
+              class="w-full bg-slate-900 border border-slate-700 text-slate-200 text-xs rounded-lg px-2.5 py-1.5 outline-none focus:border-sky-400 cursor-pointer">
               <option value="strict" selected>Strict Internal LAN / On-Prem</option>
               <option value="air_gapped">100% Air-Gapped (Defense/Finance)</option>
               <option value="standard">Standard Cloud VPC / Zero-Retention</option>
@@ -515,8 +568,11 @@
           </div>
 
           <div class="bg-slate-950/70 border border-slate-800 rounded-xl p-3.5">
-            <label for="input-electricity-cost" class="block text-xs font-semibold text-slate-300 mb-1.5">Electricity Power ($/kWh)</label>
-            <input type="number" id="input-electricity-cost" class="font-mono text-xs font-bold w-full bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-white outline-none focus:border-sky-400" value="0.15" min="0.01" max="1.00" step="0.01">
+            <label for="input-electricity-cost" class="block text-xs font-semibold text-slate-300 mb-1.5">Electricity
+              Power ($/kWh)</label>
+            <input type="number" id="input-electricity-cost"
+              class="font-mono text-xs font-bold w-full bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-white outline-none focus:border-sky-400"
+              value="0.15" min="0.01" max="1.00" step="0.01">
           </div>
 
         </div>
@@ -530,7 +586,7 @@
         </div>
 
         <div class="space-y-4">
-          
+
           <!-- On-Premise Spec -->
           <div class="bg-slate-950/70 border border-slate-800 rounded-xl p-4 space-y-3">
             <div class="text-xs font-bold text-sky-400 uppercase tracking-wider flex items-center gap-1.5">
@@ -541,13 +597,15 @@
                 <label for="select-local-gpu" class="block text-[11px] font-medium text-slate-400 mb-1">
                   NVIDIA GPU Generation (RTX 50 / 40 / 30):
                 </label>
-                <select id="select-local-gpu" class="w-full bg-slate-900 border border-slate-700 text-slate-200 text-xs rounded-lg p-2.5 outline-none focus:border-sky-400 cursor-pointer"></select>
+                <select id="select-local-gpu"
+                  class="w-full bg-slate-900 border border-slate-700 text-slate-200 text-xs rounded-lg p-2.5 outline-none focus:border-sky-400 cursor-pointer"></select>
               </div>
               <div>
                 <label for="select-onprem-model" class="block text-[11px] font-medium text-slate-400 mb-1">
                   Foundation Model (Ollama / vLLM):
                 </label>
-                <select id="select-onprem-model" class="w-full bg-slate-900 border border-slate-700 text-slate-200 text-xs rounded-lg p-2.5 outline-none focus:border-sky-400 cursor-pointer"></select>
+                <select id="select-onprem-model"
+                  class="w-full bg-slate-900 border border-slate-700 text-slate-200 text-xs rounded-lg p-2.5 outline-none focus:border-sky-400 cursor-pointer"></select>
               </div>
             </div>
           </div>
@@ -562,13 +620,15 @@
                 <label for="select-cloud-provider" class="block text-[11px] font-medium text-slate-400 mb-1">
                   Cloud Provider (AWS, GCP, RunPod, Lambda, Vast.ai, etc.):
                 </label>
-                <select id="select-cloud-provider" class="w-full bg-slate-900 border border-slate-700 text-slate-200 text-xs rounded-lg p-2.5 outline-none focus:border-purple-400 cursor-pointer"></select>
+                <select id="select-cloud-provider"
+                  class="w-full bg-slate-900 border border-slate-700 text-slate-200 text-xs rounded-lg p-2.5 outline-none focus:border-purple-400 cursor-pointer"></select>
               </div>
               <div>
                 <label for="select-cloud-instance" class="block text-[11px] font-medium text-slate-400 mb-1">
                   GPU Instance Sizing & Pricing Plan:
                 </label>
-                <select id="select-cloud-instance" class="w-full bg-slate-900 border border-slate-700 text-slate-200 text-xs rounded-lg p-2.5 outline-none focus:border-purple-400 cursor-pointer"></select>
+                <select id="select-cloud-instance"
+                  class="w-full bg-slate-900 border border-slate-700 text-slate-200 text-xs rounded-lg p-2.5 outline-none focus:border-purple-400 cursor-pointer"></select>
               </div>
             </div>
           </div>
@@ -583,13 +643,15 @@
                 <label for="select-llm-provider" class="block text-[11px] font-medium text-slate-400 mb-1">
                   Frontier Provider (ChatGPT, Claude, Gemini, Grok):
                 </label>
-                <select id="select-llm-provider" class="w-full bg-slate-900 border border-slate-700 text-slate-200 text-xs rounded-lg p-2.5 outline-none focus:border-emerald-400 cursor-pointer"></select>
+                <select id="select-llm-provider"
+                  class="w-full bg-slate-900 border border-slate-700 text-slate-200 text-xs rounded-lg p-2.5 outline-none focus:border-emerald-400 cursor-pointer"></select>
               </div>
               <div>
                 <label for="select-llm-model" class="block text-[11px] font-medium text-slate-400 mb-1">
                   Frontier Model Tier & Context Sizing:
                 </label>
-                <select id="select-llm-model" class="w-full bg-slate-900 border border-slate-700 text-slate-200 text-xs rounded-lg p-2.5 outline-none focus:border-emerald-400 cursor-pointer"></select>
+                <select id="select-llm-model"
+                  class="w-full bg-slate-900 border border-slate-700 text-slate-200 text-xs rounded-lg p-2.5 outline-none focus:border-emerald-400 cursor-pointer"></select>
               </div>
             </div>
           </div>
@@ -602,7 +664,8 @@
     <!-- Drawer Footer -->
     <div class="p-4 border-t border-slate-800 bg-slate-950/80 flex items-center justify-between gap-3">
       <span class="text-xs text-slate-400">Changes apply in real-time.</span>
-      <button type="button" id="btn-apply-drawer" onclick="closeDrawer()" class="px-5 py-2.5 rounded-xl text-xs font-bold bg-gradient-to-r from-sky-500 to-indigo-600 hover:from-sky-400 hover:to-indigo-500 text-white shadow-glow-cyan transition cursor-pointer">
+      <button type="button" id="btn-apply-drawer" onclick="closeDrawer()"
+        class="px-5 py-2.5 rounded-xl text-xs font-bold bg-gradient-to-r from-sky-500 to-indigo-600 hover:from-sky-400 hover:to-indigo-500 text-white shadow-glow-cyan transition cursor-pointer">
         Apply & Close Drawer
       </button>
     </div>
@@ -617,4 +680,5 @@
   <script src="js/app.js?v=20260910_v3"></script>
 
 </body>
+
 </html>

@@ -232,13 +232,11 @@ class AIUIRenderer {
     const elMainActiveUsers = document.getElementById('main-kpi-active-users');
     const elMainDailyQueries = document.getElementById('main-kpi-daily-queries');
     const elMainDailyTokens = document.getElementById('main-kpi-daily-tokens');
+    const elMainPeakQps = document.getElementById('main-kpi-peak-qps');
+    const elMainConcurrentStreams = document.getElementById('main-kpi-concurrent-streams');
+    const elMainMonthlyTokens = document.getElementById('main-kpi-monthly-tokens');
 
-    const elDailyQueries = document.getElementById('kpi-daily-queries');
-    const elDailyTokens = document.getElementById('kpi-daily-tokens');
-    const elPeakQps = document.getElementById('kpi-peak-qps');
-    const elConcurrentStreams = document.getElementById('kpi-concurrent-streams');
-    const elMonthlyTokens = document.getElementById('kpi-monthly-tokens');
-
+    const drawerActiveUsers = document.getElementById('drawer-kpi-active-users');
     const drawerDailyQueries = document.getElementById('drawer-kpi-daily-queries');
     const drawerDailyTokens = document.getElementById('drawer-kpi-daily-tokens');
     const drawerPeakQps = document.getElementById('drawer-kpi-peak-qps');
@@ -255,13 +253,11 @@ class AIUIRenderer {
     if (elMainActiveUsers) elMainActiveUsers.textContent = valActiveUsers;
     if (elMainDailyQueries) elMainDailyQueries.textContent = valDailyQueries;
     if (elMainDailyTokens) elMainDailyTokens.textContent = valDailyTokens;
+    if (elMainPeakQps) elMainPeakQps.textContent = valPeakQps;
+    if (elMainConcurrentStreams) elMainConcurrentStreams.textContent = valConcurrentStreams;
+    if (elMainMonthlyTokens) elMainMonthlyTokens.textContent = valMonthlyTokens;
 
-    if (elDailyQueries) elDailyQueries.textContent = valDailyQueries;
-    if (elDailyTokens) elDailyTokens.textContent = valDailyTokens;
-    if (elPeakQps) elPeakQps.textContent = valPeakQps;
-    if (elConcurrentStreams) elConcurrentStreams.textContent = workload.concurrentActiveStreams.toString();
-    if (elMonthlyTokens) elMonthlyTokens.textContent = valMonthlyTokens;
-
+    if (drawerActiveUsers) drawerActiveUsers.textContent = valActiveUsers;
     if (drawerDailyQueries) drawerDailyQueries.textContent = valDailyQueries;
     if (drawerDailyTokens) drawerDailyTokens.textContent = valDailyTokens;
     if (drawerPeakQps) drawerPeakQps.textContent = valPeakQps;
