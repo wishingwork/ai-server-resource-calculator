@@ -1,6 +1,6 @@
 /**
  * UI Renderer for Enterprise AI Server Resource Analysis (Tailwind CSS v3 Edition)
- * Handles DOM generation, component updates, itemized BOM costs, service rate cards, and calculation formulas.
+ * Handles DOM generation, component updates, itemized BOM costs, service rate cards, and comparison matrix tables.
  */
 
 class AIUIRenderer {
@@ -243,7 +243,8 @@ class AIUIRenderer {
   }
 
   /**
-   * Render 3-Way Side-by-Side Comparison Matrix with Tailwind CSS
+   * Render 3-Pillar Architectural Comparison Matrix Table with Tailwind CSS
+   * Matches the exact table style in ComparisonMatrix.tsx
    */
   renderComparisonMatrix(onPrem, cloudDeploy, cloudLlm, workload) {
     const container = document.getElementById('comparison-matrix-container');
@@ -251,201 +252,217 @@ class AIUIRenderer {
 
     if (!onPrem || !cloudDeploy || !cloudLlm) return;
 
+    const onPremCostPerUser = onPrem.monthlyCost / workload.activeUsers;
+    const cloudCostPerUser = cloudDeploy.monthlyCost / workload.activeUsers;
+    const llmCostPerUser = cloudLlm.monthlyCost / workload.activeUsers;
+
     const html = `
-      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        
-        <!-- 1. ON-PREMISE CARD -->
-        <div class="bg-slate-900/75 backdrop-blur-xl border border-slate-800 border-t-4 border-t-sky-400 rounded-2xl p-6 shadow-xl flex flex-col justify-between">
-          <div>
-            <div class="flex items-center gap-3 mb-4">
-              <span class="text-3xl">🖥️</span>
-              <div>
-                <span class="block text-[11px] font-bold uppercase tracking-wider text-slate-400">Option 1: Self-Hosted Server</span>
-                <h4 class="text-base font-bold text-white">${onPrem.gpu.name} (${onPrem.requiredGpuCount}x)</h4>
-              </div>
-            </div>
+      <div class="overflow-x-auto rounded-2xl border border-slate-800 bg-slate-900/60 shadow-2xl backdrop-blur-md">
+        <table class="w-full text-left border-collapse text-xs sm:text-sm">
+          <!-- Table Header -->
+          <thead>
+            <tr class="border-b border-slate-800 bg-slate-950/90">
+              <th class="p-4 sm:p-5 font-bold text-slate-400 uppercase tracking-wider text-xs w-1/4">
+                Architecture Dimension
+              </th>
 
-            <!-- Price Hero -->
-            <div class="bg-slate-950/80 border border-slate-800 rounded-xl p-4 text-center mb-5">
-              <div class="font-mono text-3xl font-black text-white">
-                ${this.formatMoney(onPrem.monthlyCost)} <span class="text-xs font-normal text-slate-400">/ mo</span>
-              </div>
-              <div class="text-xs text-slate-400 mt-1">Initial CapEx: <strong class="text-slate-200">${this.formatMoney(onPrem.capEx.totalCapEx)}</strong></div>
-            </div>
+              <!-- Column 1: On-Premise Server -->
+              <th class="p-4 sm:p-5 font-bold text-white w-1/4 border-l border-slate-800/80 bg-emerald-950/20">
+                <div class="flex items-center gap-2.5">
+                  <div class="p-2 rounded-xl bg-emerald-500/20 text-emerald-400 text-lg">🖥️</div>
+                  <div>
+                    <span class="font-extrabold text-emerald-400 block text-sm sm:text-base">On-Premise Server</span>
+                    <span class="text-[11px] font-normal text-slate-400">${onPrem.gpu.name} + ${onPrem.model.family}</span>
+                  </div>
+                </div>
+              </th>
 
-            <!-- Spec Details -->
-            <div class="space-y-2.5 text-xs">
-              <div class="flex justify-between items-center pb-2 border-b border-slate-800">
-                <span class="text-slate-400">Target Model:</span>
-                <span class="font-bold text-sky-400">${onPrem.model.name}</span>
-              </div>
-              <div class="flex justify-between items-center pb-2 border-b border-slate-800">
-                <span class="text-slate-400">VRAM Capacity:</span>
-                <span class="font-semibold text-slate-200">${onPrem.totalVramProvidedGb}GB (${onPrem.gpu.memory_type})</span>
-              </div>
-              <div class="flex justify-between items-center pb-2 border-b border-slate-800">
-                <span class="text-slate-400">VRAM Required:</span>
-                <span class="font-semibold text-slate-200">${onPrem.totalVramNeededGb}GB (Weights + KV)</span>
-              </div>
-              <div class="flex justify-between items-center pb-2 border-b border-slate-800">
-                <span class="text-slate-400">Monthly Power:</span>
-                <span class="font-semibold text-slate-200">${onPrem.opEx.monthlyKwh} kWh (${this.formatMoney(onPrem.opEx.monthlyElectricityCost)})</span>
-              </div>
-              <div class="flex justify-between items-center pb-2 border-b border-slate-800">
-                <span class="text-slate-400">IT Maintenance:</span>
-                <span class="font-semibold text-slate-200">${this.formatMoney(onPrem.opEx.monthlyMaintenanceCost)} / mo</span>
-              </div>
-              <div class="flex justify-between items-center pb-2 border-b border-slate-800">
-                <span class="text-slate-400">Cost / 1k Queries:</span>
-                <span class="font-mono font-semibold text-slate-200">${this.formatMoney(onPrem.costPer1kQueries, 3)}</span>
-              </div>
-              <div class="flex justify-between items-center pb-2 border-b border-slate-800">
-                <span class="text-slate-400">1-Year TCO:</span>
-                <span class="font-mono font-semibold text-slate-200">${this.formatMoney(onPrem.oneYearTCO)}</span>
-              </div>
-              <div class="flex justify-between items-center p-2.5 rounded-lg bg-slate-800/40 border border-slate-700/50">
-                <span class="text-slate-300 font-medium">3-Year Total TCO:</span>
-                <span class="font-mono text-sm font-bold text-sky-400">${this.formatMoney(onPrem.threeYearTCO)}</span>
-              </div>
-            </div>
-          </div>
+              <!-- Column 2: Deploy to Cloud -->
+              <th class="p-4 sm:p-5 font-bold text-white w-1/4 border-l border-slate-800/80 bg-blue-950/20">
+                <div class="flex items-center gap-2.5">
+                  <div class="p-2 rounded-xl bg-blue-500/20 text-blue-400 text-lg">☁️</div>
+                  <div>
+                    <span class="font-extrabold text-blue-400 block text-sm sm:text-base">Deploy to Cloud</span>
+                    <span class="text-[11px] font-normal text-slate-400">${cloudDeploy.provider.name}</span>
+                  </div>
+                </div>
+              </th>
 
-          <div class="mt-4 pt-3 border-t border-slate-800 flex items-center justify-between">
-            <span class="text-[11px] text-slate-400">Data Privacy:</span>
-            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-semibold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
-              🔒 100% Air-Gapped Local
-            </span>
-          </div>
-        </div>
+              <!-- Column 3: Commercial LLM API -->
+              <th class="p-4 sm:p-5 font-bold text-white w-1/4 border-l border-slate-800/80 bg-amber-950/20">
+                <div class="flex items-center gap-2.5">
+                  <div class="p-2 rounded-xl bg-amber-500/20 text-amber-400 text-lg">🌐</div>
+                  <div>
+                    <span class="font-extrabold text-amber-400 block text-sm sm:text-base">Commercial Cloud API</span>
+                    <span class="text-[11px] font-normal text-slate-400">${cloudLlm.provider.provider_name}</span>
+                  </div>
+                </div>
+              </th>
+            </tr>
+          </thead>
 
-        <!-- 2. CLOUD GPU DEDICATED CARD -->
-        <div class="bg-slate-900/75 backdrop-blur-xl border border-slate-800 border-t-4 border-t-purple-400 rounded-2xl p-6 shadow-xl flex flex-col justify-between">
-          <div>
-            <div class="flex items-center gap-3 mb-4">
-              <span class="text-3xl">☁️</span>
-              <div>
-                <span class="block text-[11px] font-bold uppercase tracking-wider text-slate-400">Option 2: Cloud Hosted GPU</span>
-                <h4 class="text-base font-bold text-white">${cloudDeploy.provider.name}</h4>
-              </div>
-            </div>
+          <tbody class="divide-y divide-slate-800/60 text-slate-300">
+            <!-- Row 1: Upfront Server CapEx -->
+            <tr class="hover:bg-slate-800/30 transition-colors">
+              <td class="p-4 font-semibold text-slate-300">
+                <div class="flex items-center gap-1.5">
+                  <span class="text-amber-400 font-bold">💵</span> Upfront Server CapEx
+                </div>
+              </td>
+              <td class="p-4 font-mono font-bold text-emerald-400 border-l border-slate-800/60 bg-emerald-950/10">
+                ${this.formatMoney(onPrem.capEx.totalCapEx)}
+                <div class="text-[11px] font-sans font-normal text-slate-400 mt-0.5">${onPrem.requiredGpuCount}x ${onPrem.gpu.name} build</div>
+              </td>
+              <td class="p-4 font-mono text-slate-400 border-l border-slate-800/60">
+                $0 <span class="text-xs font-sans text-slate-500">(100% OpEx)</span>
+              </td>
+              <td class="p-4 font-mono text-slate-400 border-l border-slate-800/60">
+                $0 <span class="text-xs font-sans text-slate-500">(Pay-as-you-go)</span>
+              </td>
+            </tr>
 
-            <!-- Price Hero -->
-            <div class="bg-slate-950/80 border border-slate-800 rounded-xl p-4 text-center mb-5">
-              <div class="font-mono text-3xl font-black text-white">
-                ${this.formatMoney(cloudDeploy.monthlyCost)} <span class="text-xs font-normal text-slate-400">/ mo</span>
-              </div>
-              <div class="text-xs text-slate-400 mt-1">Initial CapEx: <strong class="text-slate-200">$0 (Pay OpEx)</strong></div>
-            </div>
+            <!-- Row 2: Total Monthly Cost -->
+            <tr class="hover:bg-slate-800/30 transition-colors bg-slate-900/40">
+              <td class="p-4 font-semibold text-slate-300">
+                <div class="flex items-center gap-1.5">
+                  <span class="text-sky-400 font-bold">⏱️</span> Total Monthly Cost
+                </div>
+                <span class="text-[10px] text-slate-500 font-normal block">(Includes CapEx amortization, power, & maintenance)</span>
+              </td>
+              <td class="p-4 font-mono font-extrabold text-white border-l border-slate-800/60 bg-emerald-950/10">
+                <span class="text-base text-emerald-300">${this.formatMoney(onPrem.monthlyCost)}</span>
+                <span class="text-xs text-slate-400">/mo</span>
+                <div class="text-[11px] font-normal text-slate-400 font-sans mt-0.5">Amortized: ${this.formatMoney(onPrem.monthlyAmortization)} + OpEx: ${this.formatMoney(onPrem.opEx.totalMonthlyOpEx)}</div>
+              </td>
+              <td class="p-4 font-mono font-bold text-white border-l border-slate-800/60">
+                <span class="text-base text-blue-300">${this.formatMoney(cloudDeploy.monthlyCost)}</span>
+                <span class="text-xs text-slate-400">/mo</span>
+                <div class="text-[11px] font-normal text-slate-400 font-sans mt-0.5">Compute: ${this.formatMoney(cloudDeploy.monthlyComputeCost)} + Egress/Storage</div>
+              </td>
+              <td class="p-4 font-mono font-bold text-white border-l border-slate-800/60">
+                <span class="text-base text-amber-300">${this.formatMoney(cloudLlm.monthlyCost)}</span>
+                <span class="text-xs text-slate-400">/mo</span>
+                <div class="text-[11px] font-normal text-slate-400 font-sans mt-0.5">Token consumption billing</div>
+              </td>
+            </tr>
 
-            <!-- Spec Details -->
-            <div class="space-y-2.5 text-xs">
-              <div class="flex justify-between items-center pb-2 border-b border-slate-800">
-                <span class="text-slate-400">Instance Type:</span>
-                <span class="font-bold text-purple-400">${cloudDeploy.instance.name}</span>
-              </div>
-              <div class="flex justify-between items-center pb-2 border-b border-slate-800">
-                <span class="text-slate-400">Instance Count:</span>
-                <span class="font-semibold text-slate-200">${cloudDeploy.requiredInstances}x Instance Nodes</span>
-              </div>
-              <div class="flex justify-between items-center pb-2 border-b border-slate-800">
-                <span class="text-slate-400">Monthly Compute:</span>
-                <span class="font-semibold text-slate-200">${this.formatMoney(cloudDeploy.monthlyComputeCost)}</span>
-              </div>
-              <div class="flex justify-between items-center pb-2 border-b border-slate-800">
-                <span class="text-slate-400">Storage & Egress:</span>
-                <span class="font-semibold text-slate-200">${this.formatMoney(cloudDeploy.storageCost + cloudDeploy.egressCost)}</span>
-              </div>
-              <div class="flex justify-between items-center pb-2 border-b border-slate-800">
-                <span class="text-slate-400">DevOps Overhead:</span>
-                <span class="font-semibold text-slate-200">${this.formatMoney(cloudDeploy.devopsCost)} / mo</span>
-              </div>
-              <div class="flex justify-between items-center pb-2 border-b border-slate-800">
-                <span class="text-slate-400">Cost / 1k Queries:</span>
-                <span class="font-mono font-semibold text-slate-200">${this.formatMoney(cloudDeploy.costPer1kQueries, 3)}</span>
-              </div>
-              <div class="flex justify-between items-center pb-2 border-b border-slate-800">
-                <span class="text-slate-400">1-Year TCO:</span>
-                <span class="font-mono font-semibold text-slate-200">${this.formatMoney(cloudDeploy.oneYearTCO)}</span>
-              </div>
-              <div class="flex justify-between items-center p-2.5 rounded-lg bg-slate-800/40 border border-slate-700/50">
-                <span class="text-slate-300 font-medium">3-Year Total TCO:</span>
-                <span class="font-mono text-sm font-bold text-purple-400">${this.formatMoney(cloudDeploy.threeYearTCO)}</span>
-              </div>
-            </div>
-          </div>
+            <!-- Row 3: Cost per Active User / Month -->
+            <tr class="hover:bg-slate-800/30 transition-colors">
+              <td class="p-4 font-semibold text-slate-300">
+                Cost per User / Month
+              </td>
+              <td class="p-4 font-mono font-bold text-emerald-400 border-l border-slate-800/60 bg-emerald-950/10">
+                ${this.formatMoney(onPremCostPerUser, 2)} / seat
+              </td>
+              <td class="p-4 font-mono font-bold text-blue-400 border-l border-slate-800/60">
+                ${this.formatMoney(cloudCostPerUser, 2)} / seat
+              </td>
+              <td class="p-4 font-mono font-bold text-amber-400 border-l border-slate-800/60">
+                ${this.formatMoney(llmCostPerUser, 2)} / seat
+              </td>
+            </tr>
 
-          <div class="mt-4 pt-3 border-t border-slate-800 flex items-center justify-between">
-            <span class="text-[11px] text-slate-400">Data Privacy:</span>
-            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-semibold bg-sky-500/20 text-sky-300 border border-sky-500/30">
-              🛡️ Dedicated Cloud VPC
-            </span>
-          </div>
-        </div>
+            <!-- Row 4: 3-Year Cumulative TCO -->
+            <tr class="hover:bg-slate-800/30 transition-colors bg-slate-900/40">
+              <td class="p-4 font-semibold text-slate-300">
+                3-Year Cumulative TCO
+              </td>
+              <td class="p-4 font-mono font-black text-emerald-400 border-l border-slate-800/60 bg-emerald-950/10 text-base">
+                ${this.formatMoney(onPrem.threeYearTCO)}
+              </td>
+              <td class="p-4 font-mono font-bold text-blue-300 border-l border-slate-800/60 text-base">
+                ${this.formatMoney(cloudDeploy.threeYearTCO)}
+              </td>
+              <td class="p-4 font-mono font-bold text-amber-300 border-l border-slate-800/60 text-base">
+                ${this.formatMoney(cloudLlm.threeYearTCO)}
+              </td>
+            </tr>
 
-        <!-- 3. COMMERCIAL CLOUD LLM API CARD -->
-        <div class="bg-slate-900/75 backdrop-blur-xl border border-slate-800 border-t-4 border-t-emerald-400 rounded-2xl p-6 shadow-xl flex flex-col justify-between">
-          <div>
-            <div class="flex items-center gap-3 mb-4">
-              <span class="text-3xl">🌐</span>
-              <div>
-                <span class="block text-[11px] font-bold uppercase tracking-wider text-slate-400">Option 3: Commercial LLM API</span>
-                <h4 class="text-base font-bold text-white">${cloudLlm.provider.provider_name}</h4>
-              </div>
-            </div>
+            <!-- Row 5: Data Privacy & Security -->
+            <tr class="hover:bg-slate-800/30 transition-colors">
+              <td class="p-4 font-semibold text-slate-300">
+                <div class="flex items-center gap-1.5">
+                  <span>🛡️</span> Data Privacy & Sovereignty
+                </div>
+              </td>
+              <td class="p-4 border-l border-slate-800/60 bg-emerald-950/10">
+                <span class="inline-flex items-center gap-1 text-emerald-400 font-semibold text-xs">
+                  ✓ 100% Air-Gapped Local
+                </span>
+                <p class="text-[11px] text-slate-400 mt-0.5">Zero tokens ever leave your office / LAN</p>
+              </td>
+              <td class="p-4 border-l border-slate-800/60">
+                <span class="inline-flex items-center gap-1 text-blue-400 font-semibold text-xs">
+                  ✓ Dedicated Cloud VPC
+                </span>
+                <p class="text-[11px] text-slate-400 mt-0.5">Customer-managed encryption keys in cloud</p>
+              </td>
+              <td class="p-4 border-l border-slate-800/60">
+                <span class="inline-flex items-center gap-1 text-amber-400 font-semibold text-xs">
+                  Commercial SaaS
+                </span>
+                <p class="text-[11px] text-slate-400 mt-0.5">Enterprise BAA / zero-data retention policy</p>
+              </td>
+            </tr>
 
-            <!-- Price Hero -->
-            <div class="bg-slate-950/80 border border-slate-800 rounded-xl p-4 text-center mb-5">
-              <div class="font-mono text-3xl font-black text-white">
-                ${this.formatMoney(cloudLlm.monthlyCost)} <span class="text-xs font-normal text-slate-400">/ mo</span>
-              </div>
-              <div class="text-xs text-slate-400 mt-1">Initial CapEx: <strong class="text-slate-200">$0 (Token Sizing)</strong></div>
-            </div>
+            <!-- Row 6: Compute Engine Specs -->
+            <tr class="hover:bg-slate-800/30 transition-colors bg-slate-900/40">
+              <td class="p-4 font-semibold text-slate-300">
+                Compute Engine Specs
+              </td>
+              <td class="p-4 border-l border-slate-800/60 bg-emerald-950/10 text-xs text-slate-300">
+                <div class="font-medium text-white">${onPrem.requiredGpuCount}x ${onPrem.gpu.name} (${onPrem.totalVramProvidedGb}GB)</div>
+                <div class="text-slate-400 mt-0.5">${onPrem.model.name} (${onPrem.model.recommended_quantization})</div>
+              </td>
+              <td class="p-4 border-l border-slate-800/60 text-xs text-slate-300">
+                <div class="font-medium text-white">${cloudDeploy.instance.name}</div>
+                <div class="text-slate-400 mt-0.5">${cloudDeploy.requiredInstances}x ${cloudDeploy.provider.name} instance nodes</div>
+              </td>
+              <td class="p-4 border-l border-slate-800/60 text-xs text-slate-300">
+                <div class="font-medium text-white">${cloudLlm.model.name}</div>
+                <div class="text-slate-400 mt-0.5">${cloudLlm.provider.provider_name} cluster</div>
+              </td>
+            </tr>
 
-            <!-- Spec Details -->
-            <div class="space-y-2.5 text-xs">
-              <div class="flex justify-between items-center pb-2 border-b border-slate-800">
-                <span class="text-slate-400">Model Engine:</span>
-                <span class="font-bold text-emerald-400">${cloudLlm.model.name}</span>
-              </div>
-              <div class="flex justify-between items-center pb-2 border-b border-slate-800">
-                <span class="text-slate-400">Prompt Token Cost:</span>
-                <span class="font-semibold text-slate-200">${this.formatMoney(cloudLlm.promptCost)} / mo</span>
-              </div>
-              <div class="flex justify-between items-center pb-2 border-b border-slate-800">
-                <span class="text-slate-400">Output Token Cost:</span>
-                <span class="font-semibold text-slate-200">${this.formatMoney(cloudLlm.completionCost)} / mo</span>
-              </div>
-              <div class="flex justify-between items-center pb-2 border-b border-slate-800">
-                <span class="text-slate-400">Context Window:</span>
-                <span class="font-semibold text-slate-200">${cloudLlm.model.context_window.toLocaleString()} tokens</span>
-              </div>
-              <div class="flex justify-between items-center pb-2 border-b border-slate-800">
-                <span class="text-slate-400">Server Maintenance:</span>
-                <span class="font-semibold text-slate-200">$0 (Pure API Integration)</span>
-              </div>
-              <div class="flex justify-between items-center pb-2 border-b border-slate-800">
-                <span class="text-slate-400">Cost / 1k Queries:</span>
-                <span class="font-mono font-semibold text-slate-200">${this.formatMoney(cloudLlm.costPer1kQueries, 3)}</span>
-              </div>
-              <div class="flex justify-between items-center pb-2 border-b border-slate-800">
-                <span class="text-slate-400">1-Year TCO:</span>
-                <span class="font-mono font-semibold text-slate-200">${this.formatMoney(cloudLlm.oneYearTCO)}</span>
-              </div>
-              <div class="flex justify-between items-center p-2.5 rounded-lg bg-slate-800/40 border border-slate-700/50">
-                <span class="text-slate-300 font-medium">3-Year Total TCO:</span>
-                <span class="font-mono text-sm font-bold text-emerald-400">${this.formatMoney(cloudLlm.threeYearTCO)}</span>
-              </div>
-            </div>
-          </div>
+            <!-- Row 7: DevOps Maintenance Effort -->
+            <tr class="hover:bg-slate-800/30 transition-colors">
+              <td class="p-4 font-semibold text-slate-300">
+                DevOps Maintenance
+              </td>
+              <td class="p-4 border-l border-slate-800/60 bg-emerald-950/10 text-xs">
+                <span class="text-amber-400 font-semibold">Moderate</span>
+                <p class="text-[11px] text-slate-400 mt-0.5">Linux patching & Ollama/vLLM daemon (~3-5 hrs/mo)</p>
+              </td>
+              <td class="p-4 border-l border-slate-800/60 text-xs">
+                <span class="text-blue-400 font-semibold">Low-Moderate</span>
+                <p class="text-[11px] text-slate-400 mt-0.5">Cloud VM image updates & Terraform lifecycle</p>
+              </td>
+              <td class="p-4 border-l border-slate-800/60 text-xs">
+                <span class="text-emerald-400 font-semibold">Zero Infra</span>
+                <p class="text-[11px] text-slate-400 mt-0.5">Fully managed by SaaS provider (API key auth)</p>
+              </td>
+            </tr>
 
-          <div class="mt-4 pt-3 border-t border-slate-800 flex items-center justify-between">
-            <span class="text-[11px] text-slate-400">Data Privacy:</span>
-            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-semibold bg-slate-700/40 text-slate-300 border border-slate-600/40">
-              📑 Zero-Retention SLA
-            </span>
-          </div>
-        </div>
-
+            <!-- Row 8: Unmetered Token Scaling -->
+            <tr class="hover:bg-slate-800/30 transition-colors bg-slate-900/40">
+              <td class="p-4 font-semibold text-slate-300">
+                Unmetered Token Scaling
+              </td>
+              <td class="p-4 border-l border-slate-800/60 bg-emerald-950/10 text-xs">
+                <span class="text-emerald-400 font-bold">100% Unmetered</span>
+                <p class="text-[11px] text-slate-400 mt-0.5">Run 10x token traffic for $0 extra billing</p>
+              </td>
+              <td class="p-4 border-l border-slate-800/60 text-xs">
+                <span class="text-blue-400 font-bold">Fixed Compute</span>
+                <p class="text-[11px] text-slate-400 mt-0.5">Unmetered within GPU capacity limit</p>
+              </td>
+              <td class="p-4 border-l border-slate-800/60 text-xs">
+                <span class="text-amber-400 font-bold">Linearly Metered</span>
+                <p class="text-[11px] text-slate-400 mt-0.5">Every additional prompt & completion token is billed</p>
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     `;
 
