@@ -229,6 +229,10 @@ class AIUIRenderer {
    * Render Workload KPIs Bar with Tailwind CSS
    */
   renderWorkloadKPIs(workload) {
+    const elMainActiveUsers = document.getElementById('main-kpi-active-users');
+    const elMainDailyQueries = document.getElementById('main-kpi-daily-queries');
+    const elMainDailyTokens = document.getElementById('main-kpi-daily-tokens');
+
     const elDailyQueries = document.getElementById('kpi-daily-queries');
     const elDailyTokens = document.getElementById('kpi-daily-tokens');
     const elPeakQps = document.getElementById('kpi-peak-qps');
@@ -241,11 +245,16 @@ class AIUIRenderer {
     const drawerConcurrentStreams = document.getElementById('drawer-kpi-concurrent-streams');
     const drawerMonthlyTokens = document.getElementById('drawer-kpi-monthly-tokens');
 
+    const valActiveUsers = (workload.activeUsers || 50).toLocaleString();
     const valDailyQueries = Math.round(workload.totalDailyQueries).toLocaleString();
     const valDailyTokens = (workload.dailyTotalTokens / 1000000).toFixed(2) + 'M';
     const valPeakQps = workload.peakQps.toFixed(2) + ' req/s';
     const valConcurrentStreams = workload.concurrentActiveStreams.toString() + ' Slots';
     const valMonthlyTokens = (workload.monthlyTotalTokens / 1000000).toFixed(1) + 'M';
+
+    if (elMainActiveUsers) elMainActiveUsers.textContent = valActiveUsers;
+    if (elMainDailyQueries) elMainDailyQueries.textContent = valDailyQueries;
+    if (elMainDailyTokens) elMainDailyTokens.textContent = valDailyTokens;
 
     if (elDailyQueries) elDailyQueries.textContent = valDailyQueries;
     if (elDailyTokens) elDailyTokens.textContent = valDailyTokens;
