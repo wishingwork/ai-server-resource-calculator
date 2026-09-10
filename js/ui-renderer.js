@@ -235,11 +235,29 @@ class AIUIRenderer {
     const elConcurrentStreams = document.getElementById('kpi-concurrent-streams');
     const elMonthlyTokens = document.getElementById('kpi-monthly-tokens');
 
-    if (elDailyQueries) elDailyQueries.textContent = Math.round(workload.totalDailyQueries).toLocaleString();
-    if (elDailyTokens) elDailyTokens.textContent = (workload.dailyTotalTokens / 1000000).toFixed(2) + 'M';
-    if (elPeakQps) elPeakQps.textContent = workload.peakQps.toFixed(2) + ' req/s';
+    const drawerDailyQueries = document.getElementById('drawer-kpi-daily-queries');
+    const drawerDailyTokens = document.getElementById('drawer-kpi-daily-tokens');
+    const drawerPeakQps = document.getElementById('drawer-kpi-peak-qps');
+    const drawerConcurrentStreams = document.getElementById('drawer-kpi-concurrent-streams');
+    const drawerMonthlyTokens = document.getElementById('drawer-kpi-monthly-tokens');
+
+    const valDailyQueries = Math.round(workload.totalDailyQueries).toLocaleString();
+    const valDailyTokens = (workload.dailyTotalTokens / 1000000).toFixed(2) + 'M';
+    const valPeakQps = workload.peakQps.toFixed(2) + ' req/s';
+    const valConcurrentStreams = workload.concurrentActiveStreams.toString() + ' Slots';
+    const valMonthlyTokens = (workload.monthlyTotalTokens / 1000000).toFixed(1) + 'M';
+
+    if (elDailyQueries) elDailyQueries.textContent = valDailyQueries;
+    if (elDailyTokens) elDailyTokens.textContent = valDailyTokens;
+    if (elPeakQps) elPeakQps.textContent = valPeakQps;
     if (elConcurrentStreams) elConcurrentStreams.textContent = workload.concurrentActiveStreams.toString();
-    if (elMonthlyTokens) elMonthlyTokens.textContent = (workload.monthlyTotalTokens / 1000000).toFixed(1) + 'M';
+    if (elMonthlyTokens) elMonthlyTokens.textContent = valMonthlyTokens;
+
+    if (drawerDailyQueries) drawerDailyQueries.textContent = valDailyQueries;
+    if (drawerDailyTokens) drawerDailyTokens.textContent = valDailyTokens;
+    if (drawerPeakQps) drawerPeakQps.textContent = valPeakQps;
+    if (drawerConcurrentStreams) drawerConcurrentStreams.textContent = valConcurrentStreams;
+    if (drawerMonthlyTokens) drawerMonthlyTokens.textContent = valMonthlyTokens;
   }
 
   /**
