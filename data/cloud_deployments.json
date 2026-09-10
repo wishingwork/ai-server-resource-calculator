@@ -5,6 +5,7 @@
       "id": "aws",
       "name": "Amazon Web Services (AWS)",
       "category": "Hyperscale Cloud",
+      "pricing_ref_url": "https://aws.amazon.com/ec2/pricing/on-demand/",
       "instance_options": [
         {
           "name": "g5.2xlarge (1x NVIDIA A10G 24GB)",
@@ -12,7 +13,8 @@
           "monthly_reserved_usd": 590,
           "vram_gb": 24,
           "network_egress_gb_cost": 0.09,
-          "recommended_for": "14B-32B Q4 models, high SLA"
+          "recommended_for": "14B-32B Q4 models, high SLA",
+          "pricing_ref_url": "https://instances.vantage.sh/aws/ec2/g5.2xlarge"
         },
         {
           "name": "g5.12xlarge (4x NVIDIA A10G 96GB)",
@@ -20,7 +22,8 @@
           "monthly_reserved_usd": 2750,
           "vram_gb": 96,
           "network_egress_gb_cost": 0.09,
-          "recommended_for": "72B / 70B models with high concurrency"
+          "recommended_for": "72B / 70B models with high concurrency",
+          "pricing_ref_url": "https://instances.vantage.sh/aws/ec2/g5.12xlarge"
         },
         {
           "name": "g6.2xlarge (1x NVIDIA L4 24GB)",
@@ -28,7 +31,8 @@
           "monthly_reserved_usd": 480,
           "vram_gb": 24,
           "network_egress_gb_cost": 0.09,
-          "recommended_for": "Cost-optimized 14B models & embeddings"
+          "recommended_for": "Cost-optimized 14B models & embeddings",
+          "pricing_ref_url": "https://instances.vantage.sh/aws/ec2/g6.2xlarge"
         },
         {
           "name": "p4de.24xlarge (8x NVIDIA A100 80GB)",
@@ -36,7 +40,8 @@
           "monthly_reserved_usd": 15800,
           "vram_gb": 640,
           "network_egress_gb_cost": 0.09,
-          "recommended_for": "Enterprise cluster hosting multiple concurrent 70B+ FP16 models"
+          "recommended_for": "Enterprise cluster hosting multiple concurrent 70B+ FP16 models",
+          "pricing_ref_url": "https://instances.vantage.sh/aws/ec2/p4de.24xlarge"
         }
       ],
       "features": ["VPC peering", "HIPAA/SOC2 compliance", "IAM integration", "Global availability"],
@@ -46,6 +51,7 @@
       "id": "azure",
       "name": "Microsoft Azure",
       "category": "Hyperscale Cloud",
+      "pricing_ref_url": "https://azure.microsoft.com/en-us/pricing/details/virtual-machines/linux/",
       "instance_options": [
         {
           "name": "NC8as_T4_v3 (1x NVIDIA T4 16GB)",
@@ -53,7 +59,8 @@
           "monthly_reserved_usd": 370,
           "vram_gb": 16,
           "network_egress_gb_cost": 0.087,
-          "recommended_for": "Lightweight 7B/8B internal tools"
+          "recommended_for": "Lightweight 7B/8B internal tools",
+          "pricing_ref_url": "https://azure.microsoft.com/en-us/pricing/details/virtual-machines/linux/"
         },
         {
           "name": "NC24ads_A100_v4 (1x NVIDIA A100 80GB)",
@@ -61,7 +68,8 @@
           "monthly_reserved_usd": 1650,
           "vram_gb": 80,
           "network_egress_gb_cost": 0.087,
-          "recommended_for": "Full-speed 70B/72B Q4 or 32B FP16 serving"
+          "recommended_for": "Full-speed 70B/72B Q4 or 32B FP16 serving",
+          "pricing_ref_url": "https://azure.microsoft.com/en-us/pricing/details/virtual-machines/linux/"
         },
         {
           "name": "ND96amsr_A100_v4 (8x NVIDIA A100 80GB)",
@@ -69,7 +77,8 @@
           "monthly_reserved_usd": 13200,
           "vram_gb": 640,
           "network_egress_gb_cost": 0.087,
-          "recommended_for": "Enterprise-wide Copilot and RAG architecture"
+          "recommended_for": "Enterprise-wide Copilot and RAG architecture",
+          "pricing_ref_url": "https://azure.microsoft.com/en-us/pricing/details/virtual-machines/linux/"
         }
       ],
       "features": ["Active Directory SSO", "Azure OpenAI VPC endpoints", "FedRAMP High", "Enterprise agreements"],
@@ -79,6 +88,7 @@
       "id": "gcp",
       "name": "Google Cloud Platform (GCP)",
       "category": "Hyperscale Cloud",
+      "pricing_ref_url": "https://cloud.google.com/compute/gpus-pricing",
       "instance_options": [
         {
           "name": "G2-standard-8 (1x NVIDIA L4 24GB)",
@@ -86,7 +96,8 @@
           "monthly_reserved_usd": 410,
           "vram_gb": 24,
           "network_egress_gb_cost": 0.085,
-          "recommended_for": "Gemma 2 / Qwen 14B-32B inference"
+          "recommended_for": "Gemma 2 / Qwen 14B-32B inference",
+          "pricing_ref_url": "https://cloud.google.com/compute/gpus-pricing"
         },
         {
           "name": "A2-highgpu-1g (1x NVIDIA A100 40GB)",
@@ -94,7 +105,8 @@
           "monthly_reserved_usd": 1420,
           "vram_gb": 40,
           "network_egress_gb_cost": 0.085,
-          "recommended_for": "Standard enterprise 32B-70B Q4 serving"
+          "recommended_for": "Standard enterprise 32B-70B Q4 serving",
+          "pricing_ref_url": "https://cloud.google.com/compute/gpus-pricing"
         },
         {
           "name": "A3-highgpu-8g (8x NVIDIA H100 80GB SXM5)",
@@ -102,7 +114,8 @@
           "monthly_reserved_usd": 16100,
           "vram_gb": 640,
           "network_egress_gb_cost": 0.085,
-          "recommended_for": "Mission-critical high-throughput generative cluster"
+          "recommended_for": "Mission-critical high-throughput generative cluster",
+          "pricing_ref_url": "https://cloud.google.com/compute/gpus-pricing"
         }
       ],
       "features": ["Vertex AI integration", "GKE TPU/GPU orchestration", "Global fiber backbone", "Cloud IAM"],
@@ -112,6 +125,7 @@
       "id": "runpod",
       "name": "RunPod",
       "category": "Specialized AI Cloud",
+      "pricing_ref_url": "https://www.runpod.io/pricing",
       "instance_options": [
         {
           "name": "Community Cloud (1x RTX 4090 24GB)",
@@ -119,7 +133,8 @@
           "monthly_reserved_usd": 215,
           "vram_gb": 24,
           "network_egress_gb_cost": 0.01,
-          "recommended_for": "Startup testing & medium workloads"
+          "recommended_for": "Startup testing & medium workloads",
+          "pricing_ref_url": "https://www.runpod.io/pricing"
         },
         {
           "name": "Secure Cloud (1x RTX 4090 24GB)",
@@ -127,7 +142,8 @@
           "monthly_reserved_usd": 335,
           "vram_gb": 24,
           "network_egress_gb_cost": 0.01,
-          "recommended_for": "Production private inference"
+          "recommended_for": "Production private inference",
+          "pricing_ref_url": "https://www.runpod.io/pricing"
         },
         {
           "name": "Secure Cloud (1x NVIDIA A100 80GB SXM4)",
@@ -135,7 +151,8 @@
           "monthly_reserved_usd": 920,
           "vram_gb": 80,
           "network_egress_gb_cost": 0.01,
-          "recommended_for": "High-throughput 72B Qwen / Kimi 200k serving"
+          "recommended_for": "High-throughput 72B Qwen / Kimi 200k serving",
+          "pricing_ref_url": "https://www.runpod.io/pricing"
         },
         {
           "name": "RunPod Serverless Worker (Pay-per-second)",
@@ -143,7 +160,8 @@
           "monthly_reserved_usd": 0,
           "vram_gb": 24,
           "network_egress_gb_cost": 0.00,
-          "recommended_for": "Zero-idle cost serverless microservices"
+          "recommended_for": "Zero-idle cost serverless microservices",
+          "pricing_ref_url": "https://www.runpod.io/pricing"
         }
       ],
       "features": ["Instant Docker template deploy", "Serverless auto-scale down to zero", "Extremely low egress costs"],
@@ -153,6 +171,7 @@
       "id": "lambda",
       "name": "Lambda Labs",
       "category": "Specialized AI Cloud",
+      "pricing_ref_url": "https://lambdalabs.com/service/gpu-cloud",
       "instance_options": [
         {
           "name": "1x NVIDIA A10 (24GB PCIe)",
@@ -160,7 +179,8 @@
           "monthly_reserved_usd": 290,
           "vram_gb": 24,
           "network_egress_gb_cost": 0.00,
-          "recommended_for": "Low-cost dedicated enterprise inference"
+          "recommended_for": "Low-cost dedicated enterprise inference",
+          "pricing_ref_url": "https://lambdalabs.com/service/gpu-cloud"
         },
         {
           "name": "1x NVIDIA A100 (80GB SXM4)",
@@ -168,7 +188,8 @@
           "monthly_reserved_usd": 630,
           "vram_gb": 80,
           "network_egress_gb_cost": 0.00,
-          "recommended_for": "Best cost-efficiency per 80GB A100"
+          "recommended_for": "Best cost-efficiency per 80GB A100",
+          "pricing_ref_url": "https://lambdalabs.com/service/gpu-cloud"
         },
         {
           "name": "8x NVIDIA H100 (80GB SXM5)",
@@ -176,7 +197,8 @@
           "monthly_reserved_usd": 11990,
           "vram_gb": 640,
           "network_egress_gb_cost": 0.00,
-          "recommended_for": "Enterprise cluster for extreme concurrency"
+          "recommended_for": "Enterprise cluster for extreme concurrency",
+          "pricing_ref_url": "https://lambdalabs.com/service/gpu-cloud"
         }
       ],
       "features": ["Pure bare-metal GPU performance", "Free egress bandwidth", "Optimized PyTorch/vLLM images"],
@@ -186,6 +208,7 @@
       "id": "vast_ai",
       "name": "Vast.ai / Vest.ai",
       "category": "Decentralized GPU Cloud",
+      "pricing_ref_url": "https://vast.ai/pricing",
       "instance_options": [
         {
           "name": "Decentralized On-Demand (1x RTX 3090 24GB)",
@@ -193,7 +216,8 @@
           "monthly_reserved_usd": 98,
           "vram_gb": 24,
           "network_egress_gb_cost": 0.02,
-          "recommended_for": "Maximum budget savings for internal non-critical AI"
+          "recommended_for": "Maximum budget savings for internal non-critical AI",
+          "pricing_ref_url": "https://vast.ai/pricing"
         },
         {
           "name": "Decentralized Datacenter (1x RTX 4090 24GB)",
@@ -201,7 +225,8 @@
           "monthly_reserved_usd": 170,
           "vram_gb": 24,
           "network_egress_gb_cost": 0.02,
-          "recommended_for": "Lowest cost Ada Lovelace GPU hosting"
+          "recommended_for": "Lowest cost Ada Lovelace GPU hosting",
+          "pricing_ref_url": "https://vast.ai/pricing"
         },
         {
           "name": "Verified Datacenter (1x A100 80GB PCIe)",
@@ -209,7 +234,8 @@
           "monthly_reserved_usd": 535,
           "vram_gb": 80,
           "network_egress_gb_cost": 0.02,
-          "recommended_for": "Very low cost 80GB memory nodes"
+          "recommended_for": "Very low cost 80GB memory nodes",
+          "pricing_ref_url": "https://vast.ai/pricing"
         }
       ],
       "features": ["Lowest hourly GPU pricing in market", "Marketplace auction bidding", "Fast Docker spinup"],
@@ -219,6 +245,7 @@
       "id": "cloudflare",
       "name": "Cloudflare Workers AI",
       "category": "Edge & Serverless AI",
+      "pricing_ref_url": "https://developers.cloudflare.com/workers-ai/platform/pricing/",
       "instance_options": [
         {
           "name": "Cloudflare Workers AI Neurons (Llama / Gemma / Qwen)",
@@ -227,7 +254,8 @@
           "vram_gb": 16,
           "cost_per_1k_tokens_usd": 0.00015,
           "network_egress_gb_cost": 0.00,
-          "recommended_for": "Global edge low-latency microservices with zero idle server cost"
+          "recommended_for": "Global edge low-latency microservices with zero idle server cost",
+          "pricing_ref_url": "https://developers.cloudflare.com/workers-ai/platform/pricing/"
         },
         {
           "name": "Cloudflare Workers AI Paid Tier (10,000 Neurons/day free)",
@@ -236,7 +264,8 @@
           "vram_gb": 24,
           "cost_per_1k_tokens_usd": 0.00011,
           "network_egress_gb_cost": 0.00,
-          "recommended_for": "Serverless edge inference integrated with Cloudflare D1/Vectorize"
+          "recommended_for": "Serverless edge inference integrated with Cloudflare D1/Vectorize",
+          "pricing_ref_url": "https://developers.cloudflare.com/workers-ai/platform/pricing/"
         }
       ],
       "features": ["Zero server management", "Sub-50ms latency at 300+ edge locations", "Zero cold start with global caching", "Built-in rate limiting and DDoS protection"],

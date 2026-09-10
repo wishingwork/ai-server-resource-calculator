@@ -4,6 +4,7 @@
       "id": "ollama",
       "name": "Ollama (vLLM / llama.cpp Core)",
       "type": "Self-Hosted Runner",
+      "ref_url": "https://ollama.com/",
       "features": ["Zero configuration", "Modelfile customization", "OpenAI-compatible REST API", "GPU auto-offloading"],
       "kv_cache_efficiency": "High (PagedAttention in vLLM / GGUF in llama.cpp)",
       "overhead_vram_gb": 1.2
@@ -12,6 +13,7 @@
       "id": "vllm_engine",
       "name": "vLLM High-Throughput Production Engine",
       "type": "Production Serving",
+      "ref_url": "https://github.com/vllm-project/vllm",
       "features": ["Continuous Batching", "PagedAttention", "Tensor Parallelism", "High Concurrency RPS"],
       "kv_cache_efficiency": "Ultra-High",
       "overhead_vram_gb": 2.0
@@ -30,6 +32,7 @@
       "min_recommended_gpus": "2x RTX 5090 (64GB) or 2x RTX 4090 (48GB)",
       "performance_quality_score": 96,
       "tokens_per_sec_base": 48,
+      "ref_url": "https://huggingface.co/Qwen/Qwen2.5-72B-Instruct",
       "description": "State-of-the-art open weight reasoning & coding model rivaling proprietary frontier models."
     },
     {
@@ -44,6 +47,7 @@
       "min_recommended_gpus": "1x RTX 5090 (32GB) or 1x RTX 4090 (24GB)",
       "performance_quality_score": 91,
       "tokens_per_sec_base": 65,
+      "ref_url": "https://huggingface.co/Qwen/Qwen2.5-32B-Instruct",
       "description": "Sweet spot of enterprise capability, high speed, and single-GPU 24GB/32GB fitting."
     },
     {
@@ -58,6 +62,7 @@
       "min_recommended_gpus": "1x RTX 5080 (16GB) or 1x RTX 4070 Ti Super (16GB)",
       "performance_quality_score": 84,
       "tokens_per_sec_base": 92,
+      "ref_url": "https://huggingface.co/Qwen/Qwen2.5-14B-Instruct",
       "description": "Extremely fast enterprise model for document parsing, summarization, and internal agent workflows."
     },
     {
@@ -72,6 +77,7 @@
       "min_recommended_gpus": "1x RTX 3080 Ti (12GB) or RTX 4070 (12GB)",
       "performance_quality_score": 76,
       "tokens_per_sec_base": 125,
+      "ref_url": "https://huggingface.co/Qwen/Qwen2.5-7B-Instruct",
       "description": "Ultra-lightweight, high-speed model for high-frequency low-latency classification and extraction."
     },
     {
@@ -86,6 +92,7 @@
       "min_recommended_gpus": "1x RTX 5090 (32GB) or 1x RTX 4090 (24GB)",
       "performance_quality_score": 89,
       "tokens_per_sec_base": 58,
+      "ref_url": "https://huggingface.co/google/gemma-2-27b-it",
       "description": "Google's high-efficiency open model built with advanced distillation architecture."
     },
     {
@@ -100,6 +107,7 @@
       "min_recommended_gpus": "1x RTX 5070 Ti (16GB) or RTX 3090 (24GB)",
       "performance_quality_score": 81,
       "tokens_per_sec_base": 105,
+      "ref_url": "https://huggingface.co/google/gemma-2-9b-it",
       "description": "Exceptional capability-per-parameter with very low memory footprint."
     },
     {
@@ -114,6 +122,7 @@
       "min_recommended_gpus": "1x RTX 5090 (32GB) or 2x RTX 4090 (48GB)",
       "performance_quality_score": 90,
       "tokens_per_sec_base": 52,
+      "ref_url": "https://github.com/kvcache-ai/Mooncake",
       "description": "Long-context specialist optimized for deep enterprise repository indexing and contract review."
     },
     {
@@ -128,6 +137,7 @@
       "min_recommended_gpus": "1x RTX 5090 (32GB) or 2x RTX 4090 (48GB)",
       "performance_quality_score": 92,
       "tokens_per_sec_base": 68,
+      "ref_url": "https://huggingface.co/MiniMaxAI",
       "description": "Sparse Mixture-of-Experts (MoE) architecture offering rapid inference for multi-turn enterprise dialogues."
     }
   ]

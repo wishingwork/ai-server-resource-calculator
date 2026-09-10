@@ -2,8 +2,10 @@
   "version": "2026.1",
   "currency": "USD",
   "electricity_default_kwh": 0.15,
+  "electricity_ref_url": "https://www.eia.gov/electricity/monthly/epm_table_grapher.php?t=epmt_5_6_a",
   "server_lifespan_months": 36,
   "it_engineer_monthly_overhead_per_server": 250,
+  "it_maintenance_ref_url": "https://www.glassdoor.com/Salaries/systems-administrator-salary-SRCH_KO0,21.htm",
   "gpus": [
     {
       "id": "rtx_5090",
@@ -15,6 +17,7 @@
       "tdp_watts": 600,
       "msrp_usd": 1999,
       "server_fitted_cost_usd": 2400,
+      "pricing_ref_url": "https://www.nvidia.com/en-us/geforce/graphics-cards/50-series/rtx-5090/",
       "fp16_tflops": 210,
       "max_gpus_per_chassis": 4,
       "recommended_model_tier": "70B-72B (Dual/Quad GPU) or 32B (Single GPU)",
@@ -31,6 +34,7 @@
       "tdp_watts": 400,
       "msrp_usd": 999,
       "server_fitted_cost_usd": 1250,
+      "pricing_ref_url": "https://www.nvidia.com/en-us/geforce/graphics-cards/50-series/rtx-5080/",
       "fp16_tflops": 130,
       "max_gpus_per_chassis": 4,
       "recommended_model_tier": "14B-27B (Single GPU) or 70B (Quad GPU)",
@@ -47,6 +51,7 @@
       "tdp_watts": 300,
       "msrp_usd": 749,
       "server_fitted_cost_usd": 950,
+      "pricing_ref_url": "https://www.nvidia.com/en-us/geforce/graphics-cards/50-series/rtx-5070-ti/",
       "fp16_tflops": 95,
       "max_gpus_per_chassis": 4,
       "recommended_model_tier": "7B-14B Q4",
@@ -63,6 +68,7 @@
       "tdp_watts": 450,
       "msrp_usd": 1599,
       "server_fitted_cost_usd": 2000,
+      "pricing_ref_url": "https://www.nvidia.com/en-us/geforce/graphics-cards/40-series/rtx-4090/",
       "fp16_tflops": 165,
       "max_gpus_per_chassis": 4,
       "recommended_model_tier": "32B (Single GPU) or 70B (Dual GPU)",
@@ -79,6 +85,7 @@
       "tdp_watts": 320,
       "msrp_usd": 999,
       "server_fitted_cost_usd": 1200,
+      "pricing_ref_url": "https://www.nvidia.com/en-us/geforce/graphics-cards/40-series/rtx-4080-super/",
       "fp16_tflops": 105,
       "max_gpus_per_chassis": 4,
       "recommended_model_tier": "14B Q4",
@@ -95,6 +102,7 @@
       "tdp_watts": 285,
       "msrp_usd": 799,
       "server_fitted_cost_usd": 980,
+      "pricing_ref_url": "https://www.nvidia.com/en-us/geforce/graphics-cards/40-series/rtx-4070-ti-super/",
       "fp16_tflops": 88,
       "max_gpus_per_chassis": 4,
       "recommended_model_tier": "8B-14B Q4",
@@ -111,6 +119,7 @@
       "tdp_watts": 350,
       "msrp_usd": 850,
       "server_fitted_cost_usd": 950,
+      "pricing_ref_url": "https://www.nvidia.com/en-us/geforce/graphics-cards/30-series/rtx-3090/",
       "fp16_tflops": 71,
       "max_gpus_per_chassis": 4,
       "recommended_model_tier": "14B-32B Q4",
@@ -127,6 +136,7 @@
       "tdp_watts": 350,
       "msrp_usd": 550,
       "server_fitted_cost_usd": 680,
+      "pricing_ref_url": "https://www.nvidia.com/en-us/geforce/graphics-cards/30-series/rtx-3080-ti/",
       "fp16_tflops": 68,
       "max_gpus_per_chassis": 2,
       "recommended_model_tier": "7B-9B Q4",
@@ -143,7 +153,8 @@
       "psu": "1000W 80+ Platinum",
       "chassis_cooling": "Quiet Liquid AIO + High-airflow Tower Chassis",
       "base_hardware_cost_usd": 1600,
-      "base_idle_power_watts": 85
+      "base_idle_power_watts": 85,
+      "pricing_ref_url": "https://pcpartpicker.com/list/"
     },
     "dual_gpu_base": {
       "name": "Dual GPU AI Pro Server",
@@ -153,7 +164,8 @@
       "psu": "1600W 80+ Titanium",
       "chassis_cooling": "4U Rackmount / Heavy Duty Workstation + Server Fan Array",
       "base_hardware_cost_usd": 3200,
-      "base_idle_power_watts": 140
+      "base_idle_power_watts": 140,
+      "pricing_ref_url": "https://www.pugetsystems.com/solutions/ai-and-hpc-workstations/"
     },
     "quad_gpu_base": {
       "name": "Quad GPU Enterprise AI Server Cluster Node",
@@ -163,7 +175,8 @@
       "psu": "Dual 2000W Redundant Titanium PSU (1+1)",
       "chassis_cooling": "4U High-Density GPU Rack Server with Blower Fan Cage",
       "base_hardware_cost_usd": 6500,
-      "base_idle_power_watts": 240
+      "base_idle_power_watts": 240,
+      "pricing_ref_url": "https://www.supermicro.com/en/products/gpu"
     },
     "octa_gpu_base": {
       "name": "8x GPU Datacenter Inference Rig",
@@ -173,7 +186,8 @@
       "psu": "4x 2000W N+2 Redundant Datacenter Power",
       "chassis_cooling": "8U Server Chassis with Dedicated High-Static Airflow",
       "base_hardware_cost_usd": 12500,
-      "base_idle_power_watts": 420
+      "base_idle_power_watts": 420,
+      "pricing_ref_url": "https://www.supermicro.com/en/products/system/gpu/8u"
     }
   }
 }

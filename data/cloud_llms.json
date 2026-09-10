@@ -5,6 +5,7 @@
       "id": "chatgpt_openai",
       "provider_name": "ChatGPT / OpenAI",
       "brand_color": "#10a37f",
+      "pricing_ref_url": "https://openai.com/api/pricing/",
       "models": [
         {
           "id": "gpt_4o",
@@ -16,7 +17,8 @@
           "max_output_tokens": 16384,
           "benchmark_score": 98,
           "tier": "Flagship",
-          "ideal_use_case": "Complex business analysis, coding architecture, agentic decision making"
+          "ideal_use_case": "Complex business analysis, coding architecture, agentic decision making",
+          "pricing_ref_url": "https://openai.com/api/pricing/"
         },
         {
           "id": "gpt_4o_mini",
@@ -28,7 +30,8 @@
           "max_output_tokens": 16384,
           "benchmark_score": 88,
           "tier": "Economy",
-          "ideal_use_case": "High-volume customer support, classification, summarization"
+          "ideal_use_case": "High-volume customer support, classification, summarization",
+          "pricing_ref_url": "https://openai.com/api/pricing/"
         },
         {
           "id": "o1_reasoning",
@@ -40,7 +43,8 @@
           "max_output_tokens": 100000,
           "benchmark_score": 100,
           "tier": "Reasoning Specialist",
-          "ideal_use_case": "Complex mathematical modeling, competitive coding, rigorous auditing"
+          "ideal_use_case": "Complex mathematical modeling, competitive coding, rigorous auditing",
+          "pricing_ref_url": "https://openai.com/api/pricing/"
         },
         {
           "id": "o3_mini",
@@ -52,7 +56,8 @@
           "max_output_tokens": 100000,
           "benchmark_score": 94,
           "tier": "Reasoning Economy",
-          "ideal_use_case": "Fast STEM reasoning, technical documentation synthesis"
+          "ideal_use_case": "Fast STEM reasoning, technical documentation synthesis",
+          "pricing_ref_url": "https://openai.com/api/pricing/"
         }
       ],
       "data_privacy_sla": "Business / Enterprise API tier provides zero data retention for training, SOC2 Type II, HIPAA BAA."
@@ -61,6 +66,7 @@
       "id": "claude_anthropic",
       "provider_name": "Claude / Anthropic",
       "brand_color": "#d97706",
+      "pricing_ref_url": "https://www.anthropic.com/pricing",
       "models": [
         {
           "id": "claude_3_5_sonnet",
@@ -72,7 +78,8 @@
           "max_output_tokens": 8192,
           "benchmark_score": 99,
           "tier": "Flagship",
-          "ideal_use_case": "Elite software engineering, nuanced writing, complex reasoning, visual diagram parsing"
+          "ideal_use_case": "Elite software engineering, nuanced writing, complex reasoning, visual diagram parsing",
+          "pricing_ref_url": "https://www.anthropic.com/pricing"
         },
         {
           "id": "claude_3_5_haiku",
@@ -84,7 +91,8 @@
           "max_output_tokens": 8192,
           "benchmark_score": 89,
           "tier": "Economy",
-          "ideal_use_case": "Rapid API middleware, fast customer chatbots, high-throughput log analysis"
+          "ideal_use_case": "Rapid API middleware, fast customer chatbots, high-throughput log analysis",
+          "pricing_ref_url": "https://www.anthropic.com/pricing"
         },
         {
           "id": "claude_3_opus",
@@ -96,7 +104,8 @@
           "max_output_tokens": 4096,
           "benchmark_score": 95,
           "tier": "Heavyweights",
-          "ideal_use_case": "Deep philosophical reasoning, executive speechwriting, extensive research"
+          "ideal_use_case": "Deep philosophical reasoning, executive speechwriting, extensive research",
+          "pricing_ref_url": "https://www.anthropic.com/pricing"
         }
       ],
       "data_privacy_sla": "Anthropic Commercial Terms: Customer inputs and outputs are never used to train models."
@@ -105,6 +114,7 @@
       "id": "gemini_google",
       "provider_name": "Gemini / Google Cloud",
       "brand_color": "#3b82f6",
+      "pricing_ref_url": "https://ai.google.dev/pricing",
       "models": [
         {
           "id": "gemini_1_5_pro",
@@ -116,7 +126,8 @@
           "max_output_tokens": 8192,
           "benchmark_score": 96,
           "tier": "Long-Context Flagship",
-          "ideal_use_case": "Whole codebase analysis, hours of video/audio transcription, multi-volume books"
+          "ideal_use_case": "Whole codebase analysis, hours of video/audio transcription, multi-volume books",
+          "pricing_ref_url": "https://ai.google.dev/pricing"
         },
         {
           "id": "gemini_2_0_flash",
@@ -128,7 +139,8 @@
           "max_output_tokens": 8192,
           "benchmark_score": 92,
           "tier": "Economy Ultra",
-          "ideal_use_case": "Real-time multimodal voice/video streaming, high-speed automated agents"
+          "ideal_use_case": "Real-time multimodal voice/video streaming, high-speed automated agents",
+          "pricing_ref_url": "https://ai.google.dev/pricing"
         },
         {
           "id": "gemini_1_5_flash",
@@ -140,7 +152,8 @@
           "max_output_tokens": 8192,
           "benchmark_score": 87,
           "tier": "Economy",
-          "ideal_use_case": "High-throughput enterprise document processing at ultra-low cost"
+          "ideal_use_case": "High-throughput enterprise document processing at ultra-low cost",
+          "pricing_ref_url": "https://ai.google.dev/pricing"
         }
       ],
       "data_privacy_sla": "Google Cloud Vertex AI guarantees enterprise isolation, zero data sharing, VPC-SC compatibility."
@@ -149,6 +162,7 @@
       "id": "grok_xai",
       "provider_name": "Grok / xAI",
       "brand_color": "#111827",
+      "pricing_ref_url": "https://x.ai/api",
       "models": [
         {
           "id": "grok_2",
@@ -160,7 +174,8 @@
           "max_output_tokens": 4096,
           "benchmark_score": 94,
           "tier": "Flagship",
-          "ideal_use_case": "Real-time knowledge integration, creative writing, vision synthesis"
+          "ideal_use_case": "Real-time knowledge integration, creative writing, vision synthesis",
+          "pricing_ref_url": "https://x.ai/api"
         },
         {
           "id": "grok_2_mini",
@@ -172,7 +187,8 @@
           "max_output_tokens": 4096,
           "benchmark_score": 86,
           "tier": "Economy",
-          "ideal_use_case": "Speed-optimized queries, conversational UI"
+          "ideal_use_case": "Speed-optimized queries, conversational UI",
+          "pricing_ref_url": "https://x.ai/api"
         }
       ],
       "data_privacy_sla": "xAI Enterprise API agreement provides data confidentiality and commercial compliance terms."

@@ -22,6 +22,18 @@ class AIUIRenderer {
     })}`;
   }
 
+  createPriceLink(url, label = 'Check Official Pricing', className = '') {
+    if (!url) return '';
+    return `
+      <a href="${url}" target="_blank" rel="noopener noreferrer" title="${label}" 
+         class="inline-flex items-center justify-center p-1 rounded-md text-sky-400 hover:text-white hover:bg-sky-500/20 transition-all group cursor-pointer ${className}">
+        <svg class="w-3.5 h-3.5 inline-block opacity-80 group-hover:opacity-100 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+        </svg>
+      </a>
+    `;
+  }
+
   /**
    * Render Top 3 Recommendation Cards with Itemized BOM Pricing & Calculation Formulas
    */
@@ -79,10 +91,15 @@ class AIUIRenderer {
             <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 bg-slate-950/80 border border-slate-800/90 rounded-2xl p-4 sm:p-5 mb-6">
               
               <div class="bg-slate-900/60 border border-slate-800/80 rounded-xl p-3.5">
-                <span class="block text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-1">Initial CapEx (Upfront)</span>
-                <span class="font-mono text-xl sm:text-2xl font-black text-white">
-                  ${this.formatMoney(rec.initialCapEx)}
-                </span>
+                <div class="flex items-center justify-between mb-1">
+                  <span class="text-[11px] font-bold uppercase tracking-wider text-slate-400">Initial CapEx (Upfront)</span>
+                  ${rec.initialCapExRefUrl ? this.createPriceLink(rec.initialCapExRefUrl, 'View Hardware / Pricing Reference') : ''}
+                </div>
+                <div class="flex items-baseline gap-1.5">
+                  <span class="font-mono text-xl sm:text-2xl font-black text-white">
+                    ${this.formatMoney(rec.initialCapEx)}
+                  </span>
+                </div>
                 <span class="block text-[10px] text-slate-500 mt-1">Hardware / Setup</span>
               </div>
 
@@ -115,13 +132,18 @@ class AIUIRenderer {
             <!-- SERVICE ACCOUNT RATES CARD BOX -->
             <div class="bg-slate-950/40 border border-slate-800/60 rounded-2xl p-4 mb-6">
               <div class="text-xs font-bold uppercase tracking-wider text-sky-400 mb-3 flex items-center gap-1.5">
-                <span>💳</span> Account & Service Unit Rates:
+                <span>💳</span> Account & Service Unit Rates (with Live Reference Links):
               </div>
               <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5 text-xs">
                 ${(rec.serviceRates || []).map(sr => `
-                  <div class="bg-slate-900/70 border border-slate-800 rounded-xl p-2.5">
-                    <div class="font-bold text-slate-200 mb-0.5">${sr.service}</div>
-                    <div class="font-mono text-sky-300 font-semibold">${sr.rate}</div>
+                  <div class="bg-slate-900/70 border border-slate-800 rounded-xl p-2.5 flex flex-col justify-between">
+                    <div class="flex items-start justify-between gap-1 mb-1">
+                      <div class="font-bold text-slate-200 leading-tight">${sr.service}</div>
+                      ${sr.refUrl ? this.createPriceLink(sr.refUrl, `Check official rate: ${sr.service}`) : ''}
+                    </div>
+                    <div class="font-mono text-sky-300 font-semibold flex items-center justify-between">
+                      <span>${sr.rate}</span>
+                    </div>
                   </div>
                 `).join('')}
               </div>
@@ -133,7 +155,7 @@ class AIUIRenderer {
                 <span class="text-xs font-bold uppercase tracking-wider text-amber-400 flex items-center gap-1.5">
                   <span>📋</span> Bill of Materials (BOM) Itemized Breakdown
                 </span>
-                <span class="text-[11px] font-semibold text-slate-400">Total BOM Cost Rates</span>
+                <span class="text-[11px] font-semibold text-slate-400">Official Pricing Verified</span>
               </div>
               <div class="overflow-x-auto custom-scrollbar">
                 <table class="w-full text-left text-xs text-slate-300">
@@ -149,7 +171,12 @@ class AIUIRenderer {
                   <tbody class="divide-y divide-slate-800/60 font-medium">
                     ${(rec.bom || []).map(b => `
                       <tr class="hover:bg-slate-900/40 transition">
-                        <td class="px-4 py-3 text-slate-100 font-bold">${b.item}</td>
+                        <td class="px-4 py-3 text-slate-100 font-bold">
+                          <div class="flex items-center gap-1.5">
+                            <span>${b.item}</span>
+                            ${b.refUrl ? this.createPriceLink(b.refUrl, `Check pricing for ${b.item}`) : ''}
+                          </div>
+                        </td>
                         <td class="px-3 py-3">
                           <span class="inline-block px-2 py-0.5 rounded text-[10px] font-bold ${
                             b.type === 'CapEx' ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30' :
@@ -159,7 +186,12 @@ class AIUIRenderer {
                           </span>
                         </td>
                         <td class="px-3 py-3 font-mono text-slate-300">${b.qty}</td>
-                        <td class="px-3 py-3 font-mono text-slate-400">${b.unitCost}</td>
+                        <td class="px-3 py-3 font-mono text-slate-400">
+                          <div class="inline-flex items-center gap-1">
+                            <span>${b.unitCost}</span>
+                            ${b.refUrl ? this.createPriceLink(b.refUrl, `Verify unit rate`) : ''}
+                          </div>
+                        </td>
                         <td class="px-4 py-3 font-mono font-bold text-right ${b.type === 'CapEx' ? 'text-amber-400' : 'text-sky-400'}">
                           ${this.formatMoney(b.totalCost)}
                         </td>
@@ -293,8 +325,11 @@ class AIUIRenderer {
               <th class="p-4 sm:p-5 font-bold text-white w-1/4 border-l border-slate-800/80 bg-emerald-950/20">
                 <div class="flex items-center gap-2.5">
                   <div class="p-2 rounded-xl bg-emerald-500/20 text-emerald-400 text-lg">🖥️</div>
-                  <div>
-                    <span class="font-extrabold text-emerald-400 block text-sm sm:text-base">On-Premise Server</span>
+                  <div class="flex-1">
+                    <div class="flex items-center justify-between">
+                      <span class="font-extrabold text-emerald-400 block text-sm sm:text-base">On-Premise Server</span>
+                      ${onPrem.gpu.pricing_ref_url ? this.createPriceLink(onPrem.gpu.pricing_ref_url, 'Check GPU Pricing & Specs') : ''}
+                    </div>
                     <span class="text-[11px] font-normal text-slate-400">${onPrem.gpu.name} + ${onPrem.model.family}</span>
                   </div>
                 </div>
@@ -304,8 +339,11 @@ class AIUIRenderer {
               <th class="p-4 sm:p-5 font-bold text-white w-1/4 border-l border-slate-800/80 bg-blue-950/20">
                 <div class="flex items-center gap-2.5">
                   <div class="p-2 rounded-xl bg-blue-500/20 text-blue-400 text-lg">☁️</div>
-                  <div>
-                    <span class="font-extrabold text-blue-400 block text-sm sm:text-base">Deploy to Cloud</span>
+                  <div class="flex-1">
+                    <div class="flex items-center justify-between">
+                      <span class="font-extrabold text-blue-400 block text-sm sm:text-base">Deploy to Cloud</span>
+                      ${(cloudDeploy.instance.pricing_ref_url || cloudDeploy.provider.pricing_ref_url) ? this.createPriceLink(cloudDeploy.instance.pricing_ref_url || cloudDeploy.provider.pricing_ref_url, 'Check Cloud Instance Pricing') : ''}
+                    </div>
                     <span class="text-[11px] font-normal text-slate-400">${cloudDeploy.provider.name}</span>
                   </div>
                 </div>
@@ -315,8 +353,11 @@ class AIUIRenderer {
               <th class="p-4 sm:p-5 font-bold text-white w-1/4 border-l border-slate-800/80 bg-amber-950/20">
                 <div class="flex items-center gap-2.5">
                   <div class="p-2 rounded-xl bg-amber-500/20 text-amber-400 text-lg">🌐</div>
-                  <div>
-                    <span class="font-extrabold text-amber-400 block text-sm sm:text-base">Commercial Cloud API</span>
+                  <div class="flex-1">
+                    <div class="flex items-center justify-between">
+                      <span class="font-extrabold text-amber-400 block text-sm sm:text-base">Commercial Cloud API</span>
+                      ${(cloudLlm.model.pricing_ref_url || cloudLlm.provider.pricing_ref_url) ? this.createPriceLink(cloudLlm.model.pricing_ref_url || cloudLlm.provider.pricing_ref_url, 'Check Official API Token Pricing') : ''}
+                    </div>
                     <span class="text-[11px] font-normal text-slate-400">${cloudLlm.provider.provider_name}</span>
                   </div>
                 </div>
@@ -333,8 +374,14 @@ class AIUIRenderer {
                 </div>
               </td>
               <td class="p-4 font-mono font-bold text-emerald-400 border-l border-slate-800/60 bg-emerald-950/10">
-                ${this.formatMoney(onPrem.capEx.totalCapEx)}
-                <div class="text-[11px] font-sans font-normal text-slate-400 mt-0.5">${onPrem.requiredGpuCount}x ${onPrem.gpu.name} build</div>
+                <div class="flex items-center gap-1.5">
+                  <span class="text-base">${this.formatMoney(onPrem.capEx.totalCapEx)}</span>
+                  ${onPrem.gpu.pricing_ref_url ? this.createPriceLink(onPrem.gpu.pricing_ref_url, 'Check NVIDIA GPU & Platform CapEx') : ''}
+                </div>
+                <div class="text-[11px] font-sans font-normal text-slate-400 mt-0.5 flex items-center gap-1">
+                  <span>${onPrem.requiredGpuCount}x ${onPrem.gpu.name} build</span>
+                  ${onPrem.platform.pricing_ref_url ? this.createPriceLink(onPrem.platform.pricing_ref_url, 'Check Server Chassis Platform') : ''}
+                </div>
               </td>
               <td class="p-4 font-mono text-slate-400 border-l border-slate-800/60">
                 $0 <span class="text-xs font-sans text-slate-500">(100% OpEx)</span>
@@ -353,19 +400,35 @@ class AIUIRenderer {
                 <span class="text-[10px] text-slate-500 font-normal block">(Includes CapEx amortization, power, & maintenance)</span>
               </td>
               <td class="p-4 font-mono font-extrabold text-white border-l border-slate-800/60 bg-emerald-950/10">
-                <span class="text-base text-emerald-300">${this.formatMoney(onPrem.monthlyCost)}</span>
-                <span class="text-xs text-slate-400">/mo</span>
-                <div class="text-[11px] font-normal text-slate-400 font-sans mt-0.5">Amortized: ${this.formatMoney(onPrem.monthlyAmortization)} + OpEx: ${this.formatMoney(onPrem.opEx.totalMonthlyOpEx)}</div>
+                <div class="flex items-center gap-1.5">
+                  <span class="text-base text-emerald-300">${this.formatMoney(onPrem.monthlyCost)}</span>
+                  <span class="text-xs text-slate-400">/mo</span>
+                  ${onPrem.gpu.pricing_ref_url ? this.createPriceLink(onPrem.gpu.pricing_ref_url, 'Check GPU Pricing') : ''}
+                </div>
+                <div class="text-[11px] font-normal text-slate-400 font-sans mt-0.5 flex items-center gap-1">
+                  <span>Amortized: ${this.formatMoney(onPrem.monthlyAmortization)} + OpEx: ${this.formatMoney(onPrem.opEx.totalMonthlyOpEx)}</span>
+                  ${this.createPriceLink("https://www.eia.gov/electricity/monthly/epm_table_grapher.php?t=epmt_5_6_a", "Check EIA Electricity Rates Benchmark")}
+                </div>
               </td>
               <td class="p-4 font-mono font-bold text-white border-l border-slate-800/60">
-                <span class="text-base text-blue-300">${this.formatMoney(cloudDeploy.monthlyCost)}</span>
-                <span class="text-xs text-slate-400">/mo</span>
-                <div class="text-[11px] font-normal text-slate-400 font-sans mt-0.5">Compute: ${this.formatMoney(cloudDeploy.monthlyComputeCost)} + Egress/Storage</div>
+                <div class="flex items-center gap-1">
+                  <span class="text-base text-blue-300">${this.formatMoney(cloudDeploy.monthlyCost)}</span>
+                  <span class="text-xs text-slate-400">/mo</span>
+                  ${(cloudDeploy.instance.pricing_ref_url || cloudDeploy.provider.pricing_ref_url) ? this.createPriceLink(cloudDeploy.instance.pricing_ref_url || cloudDeploy.provider.pricing_ref_url, 'Check Cloud Provider Pricing') : ''}
+                </div>
+                <div class="text-[11px] font-normal text-slate-400 font-sans mt-0.5">
+                  Compute: ${this.formatMoney(cloudDeploy.monthlyComputeCost)} + Egress/Storage
+                </div>
               </td>
               <td class="p-4 font-mono font-bold text-white border-l border-slate-800/60">
-                <span class="text-base text-amber-300">${this.formatMoney(cloudLlm.monthlyCost)}</span>
-                <span class="text-xs text-slate-400">/mo</span>
-                <div class="text-[11px] font-normal text-slate-400 font-sans mt-0.5">Token consumption billing</div>
+                <div class="flex items-center gap-1">
+                  <span class="text-base text-amber-300">${this.formatMoney(cloudLlm.monthlyCost)}</span>
+                  <span class="text-xs text-slate-400">/mo</span>
+                  ${(cloudLlm.model.pricing_ref_url || cloudLlm.provider.pricing_ref_url) ? this.createPriceLink(cloudLlm.model.pricing_ref_url || cloudLlm.provider.pricing_ref_url, 'Check Official API Token Rates') : ''}
+                </div>
+                <div class="text-[11px] font-normal text-slate-400 font-sans mt-0.5">
+                  Token consumption billing
+                </div>
               </td>
             </tr>
 
@@ -391,13 +454,22 @@ class AIUIRenderer {
                 3-Year Cumulative TCO
               </td>
               <td class="p-4 font-mono font-black text-emerald-400 border-l border-slate-800/60 bg-emerald-950/10 text-base">
-                ${this.formatMoney(onPrem.threeYearTCO)}
+                <div class="flex items-center gap-1.5">
+                  <span>${this.formatMoney(onPrem.threeYearTCO)}</span>
+                  ${onPrem.gpu.pricing_ref_url ? this.createPriceLink(onPrem.gpu.pricing_ref_url, 'Check Hardware CapEx Reference') : ''}
+                </div>
               </td>
               <td class="p-4 font-mono font-bold text-blue-300 border-l border-slate-800/60 text-base">
-                ${this.formatMoney(cloudDeploy.threeYearTCO)}
+                <div class="flex items-center gap-1.5">
+                  <span>${this.formatMoney(cloudDeploy.threeYearTCO)}</span>
+                  ${(cloudDeploy.instance.pricing_ref_url || cloudDeploy.provider.pricing_ref_url) ? this.createPriceLink(cloudDeploy.instance.pricing_ref_url || cloudDeploy.provider.pricing_ref_url, 'Check Cloud Pricing') : ''}
+                </div>
               </td>
               <td class="p-4 font-mono font-bold text-amber-300 border-l border-slate-800/60 text-base">
-                ${this.formatMoney(cloudLlm.threeYearTCO)}
+                <div class="flex items-center gap-1.5">
+                  <span>${this.formatMoney(cloudLlm.threeYearTCO)}</span>
+                  ${(cloudLlm.model.pricing_ref_url || cloudLlm.provider.pricing_ref_url) ? this.createPriceLink(cloudLlm.model.pricing_ref_url || cloudLlm.provider.pricing_ref_url, 'Check LLM API Pricing') : ''}
+                </div>
               </td>
             </tr>
 
@@ -434,15 +506,27 @@ class AIUIRenderer {
                 Compute Engine Specs
               </td>
               <td class="p-4 border-l border-slate-800/60 bg-emerald-950/10 text-xs text-slate-300">
-                <div class="font-medium text-white">${onPrem.requiredGpuCount}x ${onPrem.gpu.name} (${onPrem.totalVramProvidedGb}GB)</div>
-                <div class="text-slate-400 mt-0.5">${onPrem.model.name} (${onPrem.model.recommended_quantization})</div>
+                <div class="font-medium text-white flex items-center gap-1">
+                  <span>${onPrem.requiredGpuCount}x ${onPrem.gpu.name} (${onPrem.totalVramProvidedGb}GB)</span>
+                  ${onPrem.gpu.pricing_ref_url ? this.createPriceLink(onPrem.gpu.pricing_ref_url, 'View GPU Specs & Pricing') : ''}
+                </div>
+                <div class="text-slate-400 mt-0.5 flex items-center gap-1">
+                  <span>${onPrem.model.name} (${onPrem.model.recommended_quantization})</span>
+                  ${onPrem.model.ref_url ? this.createPriceLink(onPrem.model.ref_url, 'View Model Weights on Hugging Face') : ''}
+                </div>
               </td>
               <td class="p-4 border-l border-slate-800/60 text-xs text-slate-300">
-                <div class="font-medium text-white">${cloudDeploy.instance.name}</div>
+                <div class="font-medium text-white flex items-center gap-1">
+                  <span>${cloudDeploy.instance.name}</span>
+                  ${(cloudDeploy.instance.pricing_ref_url || cloudDeploy.provider.pricing_ref_url) ? this.createPriceLink(cloudDeploy.instance.pricing_ref_url || cloudDeploy.provider.pricing_ref_url, 'View Instance Pricing') : ''}
+                </div>
                 <div class="text-slate-400 mt-0.5">${cloudDeploy.requiredInstances}x ${cloudDeploy.provider.name} instance nodes</div>
               </td>
               <td class="p-4 border-l border-slate-800/60 text-xs text-slate-300">
-                <div class="font-medium text-white">${cloudLlm.model.name}</div>
+                <div class="font-medium text-white flex items-center gap-1">
+                  <span>${cloudLlm.model.name}</span>
+                  ${(cloudLlm.model.pricing_ref_url || cloudLlm.provider.pricing_ref_url) ? this.createPriceLink(cloudLlm.model.pricing_ref_url || cloudLlm.provider.pricing_ref_url, 'View Model Pricing Plan') : ''}
+                </div>
                 <div class="text-slate-400 mt-0.5">${cloudLlm.provider.provider_name} cluster</div>
               </td>
             </tr>

@@ -43,6 +43,7 @@ class AIArchitectureRecommender {
         badgeText: "🏆 #1 Best ROI for Small Teams",
         badgeClass: "badge-gold",
         initialCapEx,
+        initialCapExRefUrl: "https://developers.cloudflare.com/workers-ai/platform/pricing/",
         monthlyOpEx,
         monthlyCost,
         oneYearTCO,
@@ -54,16 +55,16 @@ class AIArchitectureRecommender {
 
         // Per-Account / Service Rates
         serviceRates: [
-          { service: "Cloudflare Workers AI (Routine Queries)", rate: `$0.00015 per 1,000 tokens` },
-          { service: "OpenAI GPT-4o-mini (Complex Reasoning)", rate: `$0.15 / 1M input, $0.60 / 1M output tokens` },
-          { service: "Cloudflare Vectorize + Redis Cache", rate: `$5.00 / month flat storage rate` }
+          { service: "Cloudflare Workers AI (Routine Queries)", rate: `$0.00015 per 1,000 tokens`, refUrl: "https://developers.cloudflare.com/workers-ai/platform/pricing/" },
+          { service: "OpenAI GPT-4o-mini (Complex Reasoning)", rate: `$0.15 / 1M input, $0.60 / 1M output tokens`, refUrl: "https://openai.com/api/pricing/" },
+          { service: "Cloudflare Vectorize + Redis Cache", rate: `$5.00 / month flat storage rate`, refUrl: "https://developers.cloudflare.com/vectorize/platform/pricing/" }
         ],
 
         // Itemized Bill of Materials (BOM)
         bom: [
-          { item: "Primary Inference Engine (Cloudflare Workers AI)", type: "OpEx", qty: `${(workload.monthlyTotalTokens * 0.8 / 1000).toLocaleString(undefined, {maximumFractionDigits:0})}k tokens`, unitCost: "$0.00015 / 1k", totalCost: monthlyCompute },
-          { item: "Reasoning Gateway (OpenAI GPT-4o-mini)", type: "OpEx", qty: `${(workload.monthlyTotalTokens * 0.2 / 1000000).toFixed(1)}M tokens`, unitCost: "$0.15-$0.60 / 1M", totalCost: monthlyApiTokens },
-          { item: "Vector Cache & API Proxy Upkeep", type: "OpEx", qty: "1 Gateway", unitCost: "$50.00 / mo", totalCost: monthlyMaintenance }
+          { item: "Primary Inference Engine (Cloudflare Workers AI)", type: "OpEx", qty: `${(workload.monthlyTotalTokens * 0.8 / 1000).toLocaleString(undefined, {maximumFractionDigits:0})}k tokens`, unitCost: "$0.00015 / 1k", totalCost: monthlyCompute, refUrl: "https://developers.cloudflare.com/workers-ai/platform/pricing/" },
+          { item: "Reasoning Gateway (OpenAI GPT-4o-mini)", type: "OpEx", qty: `${(workload.monthlyTotalTokens * 0.2 / 1000000).toFixed(1)}M tokens`, unitCost: "$0.15-$0.60 / 1M", totalCost: monthlyApiTokens, refUrl: "https://openai.com/api/pricing/" },
+          { item: "Vector Cache & API Proxy Upkeep", type: "OpEx", qty: "1 Gateway", unitCost: "$50.00 / mo", totalCost: monthlyMaintenance, refUrl: "https://developers.cloudflare.com/vectorize/platform/pricing/" }
         ],
 
         // Step-by-Step Calculation Formula
@@ -114,6 +115,7 @@ class AIArchitectureRecommender {
         badgeText: "🏆 #1 Best Enterprise Value & Payback (< 5 Mo)",
         badgeClass: "badge-gold",
         initialCapEx,
+        initialCapExRefUrl: onPremOption.gpu.pricing_ref_url || "https://www.nvidia.com/en-us/geforce/graphics-cards/50-series/rtx-5090/",
         monthlyOpEx,
         monthlyCost,
         oneYearTCO,
@@ -125,19 +127,19 @@ class AIArchitectureRecommender {
 
         // Per-Account / Service Rates
         serviceRates: [
-          { service: "NVIDIA RTX 5090 32GB GDDR7 Hardware", rate: `$2,400.00 per fitted GPU (CapEx)` },
-          { service: "Dual-GPU Workstation Server Base Platform", rate: `$3,200.00 base platform build (CapEx)` },
-          { service: "Power & Electricity Rate", rate: `${onPremOption.opEx.monthlyKwh} kWh / mo @ $${workload.electricityKwhRate} / kWh` },
-          { service: "IT Hardware Maintenance & Engineering", rate: `$${monthlyMaintenance.toFixed(2)} / month per server node` }
+          { service: "NVIDIA RTX 5090 32GB GDDR7 Hardware", rate: `$2,400.00 per fitted GPU (CapEx)`, refUrl: onPremOption.gpu.pricing_ref_url || "https://www.nvidia.com/en-us/geforce/graphics-cards/50-series/rtx-5090/" },
+          { service: "Dual-GPU Workstation Server Base Platform", rate: `$3,200.00 base platform build (CapEx)`, refUrl: onPremOption.platform.pricing_ref_url || "https://www.pugetsystems.com/solutions/ai-and-hpc-workstations/" },
+          { service: "Power & Electricity Rate", rate: `${onPremOption.opEx.monthlyKwh} kWh / mo @ $${workload.electricityKwhRate} / kWh`, refUrl: "https://www.eia.gov/electricity/monthly/epm_table_grapher.php?t=epmt_5_6_a" },
+          { service: "IT Hardware Maintenance & Engineering", rate: `$${monthlyMaintenance.toFixed(2)} / month per server node`, refUrl: "https://www.glassdoor.com/Salaries/systems-administrator-salary-SRCH_KO0,21.htm" }
         ],
 
         // Itemized Bill of Materials (BOM)
         bom: [
-          { item: `NVIDIA GeForce RTX 5090 (32GB GDDR7)`, type: "CapEx", qty: `${onPremOption.requiredGpuCount}x GPUs`, unitCost: `$${onPremOption.gpu.server_fitted_cost_usd.toLocaleString()}`, totalCost: onPremOption.capEx.gpuHardwareCost },
-          { item: `${onPremOption.platform.name} (${onPremOption.platform.cpu}, ${onPremOption.platform.ram})`, type: "CapEx", qty: "1x Server Chassis", unitCost: `$${onPremOption.platform.base_hardware_cost_usd.toLocaleString()}`, totalCost: onPremOption.platform.base_hardware_cost_usd },
-          { item: `vLLM / Ollama Engine + ${onPremOption.model.name}`, type: "Software", qty: "Open Source", unitCost: "$0.00", totalCost: 0 },
-          { item: `Electrical Power (${onPremOption.opEx.monthlyKwh} kWh / mo)`, type: "OpEx", qty: `${onPremOption.opEx.monthlyKwh} kWh`, unitCost: `$${workload.electricityKwhRate} / kWh`, totalCost: monthlyElectricity },
-          { item: `IT Engineer Server Maintenance Overhead`, type: "OpEx", qty: "1 Node", unitCost: `$${monthlyMaintenance.toFixed(2)} / mo`, totalCost: monthlyMaintenance }
+          { item: `NVIDIA GeForce RTX 5090 (32GB GDDR7)`, type: "CapEx", qty: `${onPremOption.requiredGpuCount}x GPUs`, unitCost: `$${onPremOption.gpu.server_fitted_cost_usd.toLocaleString()}`, totalCost: onPremOption.capEx.gpuHardwareCost, refUrl: onPremOption.gpu.pricing_ref_url || "https://www.nvidia.com/en-us/geforce/graphics-cards/50-series/rtx-5090/" },
+          { item: `${onPremOption.platform.name} (${onPremOption.platform.cpu}, ${onPremOption.platform.ram})`, type: "CapEx", qty: "1x Server Chassis", unitCost: `$${onPremOption.platform.base_hardware_cost_usd.toLocaleString()}`, totalCost: onPremOption.platform.base_hardware_cost_usd, refUrl: onPremOption.platform.pricing_ref_url || "https://www.pugetsystems.com/solutions/ai-and-hpc-workstations/" },
+          { item: `vLLM / Ollama Engine + ${onPremOption.model.name}`, type: "Software", qty: "Open Source", unitCost: "$0.00", totalCost: 0, refUrl: onPremOption.model.ref_url || "https://huggingface.co/Qwen/Qwen2.5-32B-Instruct" },
+          { item: `Electrical Power (${onPremOption.opEx.monthlyKwh} kWh / mo)`, type: "OpEx", qty: `${onPremOption.opEx.monthlyKwh} kWh`, unitCost: `$${workload.electricityKwhRate} / kWh`, totalCost: monthlyElectricity, refUrl: "https://www.eia.gov/electricity/monthly/epm_table_grapher.php?t=epmt_5_6_a" },
+          { item: `IT Engineer Server Maintenance Overhead`, type: "OpEx", qty: "1 Node", unitCost: `$${monthlyMaintenance.toFixed(2)} / mo`, totalCost: monthlyMaintenance, refUrl: "https://www.glassdoor.com/Salaries/systems-administrator-salary-SRCH_KO0,21.htm" }
         ],
 
         // Step-by-Step Calculation Formula
@@ -189,6 +191,7 @@ class AIArchitectureRecommender {
         badgeText: "🏆 #1 Flagship Performance & Massive TCO Savings",
         badgeClass: "badge-gold",
         initialCapEx,
+        initialCapExRefUrl: onPremOption.gpu.pricing_ref_url || "https://www.nvidia.com/en-us/geforce/graphics-cards/50-series/rtx-5090/",
         monthlyOpEx,
         monthlyCost,
         oneYearTCO,
@@ -199,18 +202,18 @@ class AIArchitectureRecommender {
         devopsEffort: "Medium (Kubernetes / Ray Cluster Management)",
 
         serviceRates: [
-          { service: "NVIDIA RTX 5090 32GB GDDR7 GPUs", rate: `4x @ $2,400.00 per fitted GPU ($9,600.00 CapEx)` },
-          { service: "Quad-GPU Enterprise 4U Server Platform", rate: `$6,500.00 base chassis platform (CapEx)` },
-          { service: "Power & Electricity Rate", rate: `${onPremOption.opEx.monthlyKwh} kWh / mo @ $${workload.electricityKwhRate} / kWh` },
-          { service: "Enterprise IT SysAdmin Overhead", rate: `$${monthlyMaintenance.toFixed(2)} / month` }
+          { service: "NVIDIA RTX 5090 32GB GDDR7 GPUs", rate: `4x @ $2,400.00 per fitted GPU ($9,600.00 CapEx)`, refUrl: onPremOption.gpu.pricing_ref_url || "https://www.nvidia.com/en-us/geforce/graphics-cards/50-series/rtx-5090/" },
+          { service: "Quad-GPU Enterprise 4U Server Platform", rate: `$6,500.00 base chassis platform (CapEx)`, refUrl: onPremOption.platform.pricing_ref_url || "https://www.supermicro.com/en/products/gpu" },
+          { service: "Power & Electricity Rate", rate: `${onPremOption.opEx.monthlyKwh} kWh / mo @ $${workload.electricityKwhRate} / kWh`, refUrl: "https://www.eia.gov/electricity/monthly/epm_table_grapher.php?t=epmt_5_6_a" },
+          { service: "Enterprise IT SysAdmin Overhead", rate: `$${monthlyMaintenance.toFixed(2)} / month`, refUrl: "https://www.glassdoor.com/Salaries/systems-administrator-salary-SRCH_KO0,21.htm" }
         ],
 
         bom: [
-          { item: `NVIDIA GeForce RTX 5090 (32GB GDDR7)`, type: "CapEx", qty: `${onPremOption.requiredGpuCount}x GPUs`, unitCost: `$${onPremOption.gpu.server_fitted_cost_usd.toLocaleString()}`, totalCost: onPremOption.capEx.gpuHardwareCost },
-          { item: `${onPremOption.platform.name}`, type: "CapEx", qty: "1x 4U Server Chassis", unitCost: `$${onPremOption.platform.base_hardware_cost_usd.toLocaleString()}`, totalCost: onPremOption.platform.base_hardware_cost_usd },
-          { item: `vLLM Tensor Parallel Stack + ${onPremOption.model.name}`, type: "Software", qty: "Open Source", unitCost: "$0.00", totalCost: 0 },
-          { item: `Electrical Power (${onPremOption.opEx.monthlyKwh} kWh / mo)`, type: "OpEx", qty: `${onPremOption.opEx.monthlyKwh} kWh`, unitCost: `$${workload.electricityKwhRate} / kWh`, totalCost: monthlyElectricity },
-          { item: `Enterprise IT SysAdmin & Hardware Maintenance`, type: "OpEx", qty: "1 Cluster Node", unitCost: `$${monthlyMaintenance.toFixed(2)} / mo`, totalCost: monthlyMaintenance }
+          { item: `NVIDIA GeForce RTX 5090 (32GB GDDR7)`, type: "CapEx", qty: `${onPremOption.requiredGpuCount}x GPUs`, unitCost: `$${onPremOption.gpu.server_fitted_cost_usd.toLocaleString()}`, totalCost: onPremOption.capEx.gpuHardwareCost, refUrl: onPremOption.gpu.pricing_ref_url || "https://www.nvidia.com/en-us/geforce/graphics-cards/50-series/rtx-5090/" },
+          { item: `${onPremOption.platform.name}`, type: "CapEx", qty: "1x 4U Server Chassis", unitCost: `$${onPremOption.platform.base_hardware_cost_usd.toLocaleString()}`, totalCost: onPremOption.platform.base_hardware_cost_usd, refUrl: onPremOption.platform.pricing_ref_url || "https://www.supermicro.com/en/products/gpu" },
+          { item: `vLLM Tensor Parallel Stack + ${onPremOption.model.name}`, type: "Software", qty: "Open Source", unitCost: "$0.00", totalCost: 0, refUrl: onPremOption.model.ref_url || "https://huggingface.co/Qwen/Qwen2.5-72B-Instruct" },
+          { item: `Electrical Power (${onPremOption.opEx.monthlyKwh} kWh / mo)`, type: "OpEx", qty: `${onPremOption.opEx.monthlyKwh} kWh`, unitCost: `$${workload.electricityKwhRate} / kWh`, totalCost: monthlyElectricity, refUrl: "https://www.eia.gov/electricity/monthly/epm_table_grapher.php?t=epmt_5_6_a" },
+          { item: `Enterprise IT SysAdmin & Hardware Maintenance`, type: "OpEx", qty: "1 Cluster Node", unitCost: `$${monthlyMaintenance.toFixed(2)} / mo`, totalCost: monthlyMaintenance, refUrl: "https://www.glassdoor.com/Salaries/systems-administrator-salary-SRCH_KO0,21.htm" }
         ],
 
         calculationFormula: {
@@ -265,6 +268,7 @@ class AIArchitectureRecommender {
       badgeText: "🔒 #2 100% Data Sovereignty & Zero Egress",
       badgeClass: "badge-purple",
       initialCapEx: initialCapExSec,
+      initialCapExRefUrl: onPremSecurityOption.gpu.pricing_ref_url || "https://www.nvidia.com/en-us/geforce/graphics-cards/40-series/rtx-4090/",
       monthlyOpEx: monthlyOpExSec,
       monthlyCost: monthlyCostSec,
       oneYearTCO: oneYearTCOSec,
@@ -275,18 +279,18 @@ class AIArchitectureRecommender {
       devopsEffort: "Medium (Physical Server & Network Segmentation)",
 
       serviceRates: [
-        { service: `NVIDIA ${onPremSecurityOption.gpu.name} (${onPremSecurityOption.gpu.vram_gb}GB)`, rate: `${onPremSecurityOption.requiredGpuCount}x @ $${onPremSecurityOption.gpu.server_fitted_cost_usd.toLocaleString()} ea (CapEx)` },
-        { service: `${onPremSecurityOption.platform.name}`, rate: `$${onPremSecurityOption.platform.base_hardware_cost_usd.toLocaleString()} platform cost (CapEx)` },
-        { service: "Power & Electricity Rate", rate: `${onPremSecurityOption.opEx.monthlyKwh} kWh / mo @ $${workload.electricityKwhRate} / kWh` },
-        { service: "Air-Gapped Infrastructure Maintenance", rate: `$${monthlyMaintSec.toFixed(2)} / month` }
+        { service: `NVIDIA ${onPremSecurityOption.gpu.name} (${onPremSecurityOption.gpu.vram_gb}GB)`, rate: `${onPremSecurityOption.requiredGpuCount}x @ $${onPremSecurityOption.gpu.server_fitted_cost_usd.toLocaleString()} ea (CapEx)`, refUrl: onPremSecurityOption.gpu.pricing_ref_url || "https://www.nvidia.com/en-us/geforce/graphics-cards/" },
+        { service: `${onPremSecurityOption.platform.name}`, rate: `$${onPremSecurityOption.platform.base_hardware_cost_usd.toLocaleString()} platform cost (CapEx)`, refUrl: onPremSecurityOption.platform.pricing_ref_url || "https://www.pugetsystems.com/solutions/ai-and-hpc-workstations/" },
+        { service: "Power & Electricity Rate", rate: `${onPremSecurityOption.opEx.monthlyKwh} kWh / mo @ $${workload.electricityKwhRate} / kWh`, refUrl: "https://www.eia.gov/electricity/monthly/epm_table_grapher.php?t=epmt_5_6_a" },
+        { service: "Air-Gapped Infrastructure Maintenance", rate: `$${monthlyMaintSec.toFixed(2)} / month`, refUrl: "https://www.glassdoor.com/Salaries/systems-administrator-salary-SRCH_KO0,21.htm" }
       ],
 
       bom: [
-        { item: `NVIDIA ${onPremSecurityOption.gpu.name} (${onPremSecurityOption.gpu.vram_gb}GB VRAM)`, type: "CapEx", qty: `${onPremSecurityOption.requiredGpuCount}x GPUs`, unitCost: `$${onPremSecurityOption.gpu.server_fitted_cost_usd.toLocaleString()}`, totalCost: onPremSecurityOption.capEx.gpuHardwareCost },
-        { item: `${onPremSecurityOption.platform.name}`, type: "CapEx", qty: "1x Server Chassis", unitCost: `$${onPremSecurityOption.platform.base_hardware_cost_usd.toLocaleString()}`, totalCost: onPremSecurityOption.platform.base_hardware_cost_usd },
-        { item: `Ollama Enclave + ${onPremSecurityOption.model.name}`, type: "Software", qty: "Air-Gapped", unitCost: "$0.00", totalCost: 0 },
-        { item: `Power Draw (${onPremSecurityOption.opEx.monthlyKwh} kWh / mo)`, type: "OpEx", qty: `${onPremSecurityOption.opEx.monthlyKwh} kWh`, unitCost: `$${workload.electricityKwhRate} / kWh`, totalCost: monthlyElecSec },
-        { item: `Secured Air-Gapped SysAdmin Overhead`, type: "OpEx", qty: "1 Enclave", unitCost: `$${monthlyMaintSec.toFixed(2)} / mo`, totalCost: monthlyMaintSec }
+        { item: `NVIDIA ${onPremSecurityOption.gpu.name} (${onPremSecurityOption.gpu.vram_gb}GB VRAM)`, type: "CapEx", qty: `${onPremSecurityOption.requiredGpuCount}x GPUs`, unitCost: `$${onPremSecurityOption.gpu.server_fitted_cost_usd.toLocaleString()}`, totalCost: onPremSecurityOption.capEx.gpuHardwareCost, refUrl: onPremSecurityOption.gpu.pricing_ref_url || "https://www.nvidia.com/en-us/geforce/graphics-cards/" },
+        { item: `${onPremSecurityOption.platform.name}`, type: "CapEx", qty: "1x Server Chassis", unitCost: `$${onPremSecurityOption.platform.base_hardware_cost_usd.toLocaleString()}`, totalCost: onPremSecurityOption.platform.base_hardware_cost_usd, refUrl: onPremSecurityOption.platform.pricing_ref_url || "https://www.pugetsystems.com/solutions/ai-and-hpc-workstations/" },
+        { item: `Ollama Enclave + ${onPremSecurityOption.model.name}`, type: "Software", qty: "Air-Gapped", unitCost: "$0.00", totalCost: 0, refUrl: "https://ollama.com/" },
+        { item: `Power Draw (${onPremSecurityOption.opEx.monthlyKwh} kWh / mo)`, type: "OpEx", qty: `${onPremSecurityOption.opEx.monthlyKwh} kWh`, unitCost: `$${workload.electricityKwhRate} / kWh`, totalCost: monthlyElecSec, refUrl: "https://www.eia.gov/electricity/monthly/epm_table_grapher.php?t=epmt_5_6_a" },
+        { item: `Secured Air-Gapped SysAdmin Overhead`, type: "OpEx", qty: "1 Enclave", unitCost: `$${monthlyMaintSec.toFixed(2)} / mo`, totalCost: monthlyMaintSec, refUrl: "https://www.glassdoor.com/Salaries/systems-administrator-salary-SRCH_KO0,21.htm" }
       ],
 
       calculationFormula: {
@@ -341,6 +345,7 @@ class AIArchitectureRecommender {
         badgeText: "⚡ #3 High-Elasticity Cloud Dedicated",
         badgeClass: "badge-cyan",
         initialCapEx: initialCapExCloud,
+        initialCapExRefUrl: cloudOption.instance.pricing_ref_url || cloudOption.provider.pricing_ref_url || "https://www.runpod.io/pricing",
         monthlyOpEx: monthlyOpExCloud,
         monthlyCost: monthlyCostCloud,
         oneYearTCO: oneYearTCOCloud,
@@ -351,17 +356,17 @@ class AIArchitectureRecommender {
         devopsEffort: "Low-Medium (Managed Cloud Infrastructure)",
 
         serviceRates: [
-          { service: `${cloudOption.instance.name}`, rate: `$1.89 per hour per GPU instance node` },
-          { service: "Enterprise Network Storage Array", rate: `$40.00 / month per node` },
-          { service: "Cloud Bandwidth Egress Rate", rate: `$0.01 per GB output data` },
-          { service: "Managed Cloud Infrastructure Ops", rate: `$250.00 / month` }
+          { service: `${cloudOption.instance.name}`, rate: `$1.89 per hour per GPU instance node`, refUrl: cloudOption.instance.pricing_ref_url || cloudOption.provider.pricing_ref_url || "https://www.runpod.io/pricing" },
+          { service: "Enterprise Network Storage Array", rate: `$40.00 / month per node`, refUrl: cloudOption.provider.pricing_ref_url || "https://www.runpod.io/pricing" },
+          { service: "Cloud Bandwidth Egress Rate", rate: `$0.01 per GB output data`, refUrl: cloudOption.provider.pricing_ref_url || "https://www.runpod.io/pricing" },
+          { service: "Managed Cloud Infrastructure Ops", rate: `$250.00 / month`, refUrl: "https://www.glassdoor.com/Salaries/cloud-engineer-salary-SRCH_KO0,14.htm" }
         ],
 
         bom: [
-          { item: `${cloudOption.instance.name}`, type: "OpEx", qty: `${cloudOption.requiredInstances}x Nodes (730 hrs/mo)`, unitCost: "$1.89 / hr", totalCost: monthlyComputeCloud },
-          { item: "High-Performance NVMe Cloud Storage Array", type: "OpEx", qty: `${cloudOption.requiredInstances}x Disks`, unitCost: "$40.00 / mo", totalCost: monthlyStorageCloud },
-          { item: "Network Egress Data Bandwidth", type: "OpEx", qty: "Output Traffic", unitCost: "$0.01 / GB", totalCost: monthlyEgressCloud },
-          { item: "Managed Cloud Container DevOps", type: "OpEx", qty: "1 Cluster", unitCost: "$250.00 / mo", totalCost: monthlyDevOpsCloud }
+          { item: `${cloudOption.instance.name}`, type: "OpEx", qty: `${cloudOption.requiredInstances}x Nodes (730 hrs/mo)`, unitCost: "$1.89 / hr", totalCost: monthlyComputeCloud, refUrl: cloudOption.instance.pricing_ref_url || cloudOption.provider.pricing_ref_url || "https://www.runpod.io/pricing" },
+          { item: "High-Performance NVMe Cloud Storage Array", type: "OpEx", qty: `${cloudOption.requiredInstances}x Disks`, unitCost: "$40.00 / mo", totalCost: monthlyStorageCloud, refUrl: cloudOption.provider.pricing_ref_url || "https://www.runpod.io/pricing" },
+          { item: "Network Egress Data Bandwidth", type: "OpEx", qty: "Output Traffic", unitCost: "$0.01 / GB", totalCost: monthlyEgressCloud, refUrl: cloudOption.provider.pricing_ref_url || "https://www.runpod.io/pricing" },
+          { item: "Managed Cloud Container DevOps", type: "OpEx", qty: "1 Cluster", unitCost: "$250.00 / mo", totalCost: monthlyDevOpsCloud, refUrl: "https://www.glassdoor.com/Salaries/cloud-engineer-salary-SRCH_KO0,14.htm" }
         ],
 
         calculationFormula: {
@@ -410,6 +415,7 @@ class AIArchitectureRecommender {
         badgeText: "🧠 #3 State-of-the-Art Frontier Intelligence",
         badgeClass: "badge-cyan",
         initialCapEx: initialCapExApi,
+        initialCapExRefUrl: apiOption.provider.pricing_ref_url || "https://www.anthropic.com/pricing",
         monthlyOpEx: monthlyOpExApi,
         monthlyCost: monthlyCostApi,
         oneYearTCO: oneYearTCOApi,
@@ -420,15 +426,15 @@ class AIArchitectureRecommender {
         devopsEffort: "Zero (Pure REST API Integration)",
 
         serviceRates: [
-          { service: `${apiOption.model.name} Input Prompt Tokens`, rate: `$${apiOption.model.input_cost_per_1m.toFixed(2)} per 1,000,000 tokens` },
-          { service: `${apiOption.model.name} Output Completion Tokens`, rate: `$${apiOption.model.output_cost_per_1m.toFixed(2)} per 1,000,000 tokens` },
-          { service: "API Gateway Integration & Proxy Upkeep", rate: `$${monthlyMaintenanceApi.toFixed(2)} / month flat` }
+          { service: `${apiOption.model.name} Input Prompt Tokens`, rate: `$${apiOption.model.input_cost_per_1m.toFixed(2)} per 1,000,000 tokens`, refUrl: apiOption.model.pricing_ref_url || apiOption.provider.pricing_ref_url || "https://www.anthropic.com/pricing" },
+          { service: `${apiOption.model.name} Output Completion Tokens`, rate: `$${apiOption.model.output_cost_per_1m.toFixed(2)} per 1,000,000 tokens`, refUrl: apiOption.model.pricing_ref_url || apiOption.provider.pricing_ref_url || "https://www.anthropic.com/pricing" },
+          { service: "API Gateway Integration & Proxy Upkeep", rate: `$${monthlyMaintenanceApi.toFixed(2)} / month flat`, refUrl: "https://litellm.ai/" }
         ],
 
         bom: [
-          { item: `Input Prompt Token Demand`, type: "OpEx", qty: `${(workload.monthlyPromptTokens / 1000000).toFixed(1)}M tokens / mo`, unitCost: `$${apiOption.model.input_cost_per_1m.toFixed(2)} / 1M`, totalCost: monthlyPromptCost },
-          { item: `Output Completion Token Demand`, type: "OpEx", qty: `${(workload.monthlyCompletionTokens / 1000000).toFixed(1)}M tokens / mo`, unitCost: `$${apiOption.model.output_cost_per_1m.toFixed(2)} / 1M`, totalCost: monthlyCompletionCost },
-          { item: `API Key Security & Integration Maintenance`, type: "OpEx", qty: "1 Integration", unitCost: `$${monthlyMaintenanceApi.toFixed(2)} / mo`, totalCost: monthlyMaintenanceApi }
+          { item: `Input Prompt Token Demand`, type: "OpEx", qty: `${(workload.monthlyPromptTokens / 1000000).toFixed(1)}M tokens / mo`, unitCost: `$${apiOption.model.input_cost_per_1m.toFixed(2)} / 1M`, totalCost: monthlyPromptCost, refUrl: apiOption.model.pricing_ref_url || apiOption.provider.pricing_ref_url || "https://www.anthropic.com/pricing" },
+          { item: `Output Completion Token Demand`, type: "OpEx", qty: `${(workload.monthlyCompletionTokens / 1000000).toFixed(1)}M tokens / mo`, unitCost: `$${apiOption.model.output_cost_per_1m.toFixed(2)} / 1M`, totalCost: monthlyCompletionCost, refUrl: apiOption.model.pricing_ref_url || apiOption.provider.pricing_ref_url || "https://www.anthropic.com/pricing" },
+          { item: `API Key Security & Integration Maintenance`, type: "OpEx", qty: "1 Integration", unitCost: `$${monthlyMaintenanceApi.toFixed(2)} / mo`, totalCost: monthlyMaintenanceApi, refUrl: "https://litellm.ai/" }
         ],
 
         calculationFormula: {
